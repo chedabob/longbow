@@ -1,5 +1,6 @@
 $:.push File.expand_path('../../', __FILE__)
 require 'fileutils'
+require 'longbow'
 
 command :install do |c|
   c.syntax = 'longbow install [options]'
@@ -13,19 +14,19 @@ command :install do |c|
     @screens_path = @directory + '/.longbow.screens'
 
     if File.exist?(@json_path)
-      puts '  .longbow.json already exists at ' + @json_path
+      Longbow::red '  .longbow.json already exists at ' + @json_path
     else
       File.open(@directory + '/.longbow.json', 'w') do |f|
         f.write('{"TargetName":{"icon_url":"https://somewhere.net/img.png", "info_plist":{"CFBundleId":"com.company.target"}}}')
       end
-      puts '  .longbow.json created'
+      Longbow::green '  .longbow.json created'
     end
 
     if File.exist?(@screens_path)
-      puts '  .longbow.screens already exists at ' + @screens_path
+      Longbow::red '  .longbow.screens already exists at ' + @screens_path
     else
       File.open(@directory + '/.longbow.screens', 'w') {}
-      puts '  .longbow.screens created'
+      Longbow::green '  .longbow.screens created'
     end
   end
 end

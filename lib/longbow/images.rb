@@ -1,4 +1,6 @@
+$:.push File.expand_path('../', __FILE__)
 require 'mini_magick'
+require 'colors'
 
 module Longbow
   # Resize Icon
@@ -26,7 +28,7 @@ module Longbow
       image.write  directory + '/Images.xcassets/' + target + '.appiconset/icon57x57.png'
       image.resize '29x29'
       image.write  directory + '/Images.xcassets/' + target + '.appiconset/icon29x29.png'
-      puts('  Created iPhone images for ' + target) if $VERBOSE
+      Longbow::green ('  Created iPhone icon images for ' + target) if $VERBOSE
     end
 
     if iPad
@@ -50,7 +52,7 @@ module Longbow
       image.write  directory + '/Images.xcassets/' + target + '.appiconset/icon40x40.png'
       image.resize '29x29'
       image.write  directory + '/Images.xcassets/' + target + '.appiconset/icon29x29.png'
-      puts('  Created iPad images for ' + target) if $VERBOSE
+      Longbow::green ('  Created iPad icon images for ' + target) if $VERBOSE
     end
 
     return true

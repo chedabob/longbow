@@ -1,6 +1,6 @@
 $:.push File.expand_path('../../', __FILE__)
-require 'colors'
 require 'fileutils'
+require 'longbow/colors'
 
 command :create do |c|
   c.syntax = 'longbow create [options]'
@@ -20,12 +20,11 @@ command :create do |c|
     # Check for .longbow.json
     @json_path = @directory + '/.longbow.json'
     if !File.exists?(@json_path)
-      puts "Couldn't find .longbow.json at " + @json_path
+      puts
+      Longbow::red "Couldn't find .longbow.json at " + @json_path
       puts
       puts "Run this command to install the correct files:"
-      puts
       puts "longbow install"
-      puts
       puts
       next
     end
