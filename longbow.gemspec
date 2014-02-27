@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'fileutils'
   spec.add_dependency 'commander', '~> 4.1'
   spec.add_dependency 'dotenv', '~> 0.7'
+  spec.add_dependency 'mini_magick', '~> 3.7.0'
 
   spec.add_development_dependency "rake"
 
