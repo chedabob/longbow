@@ -9,7 +9,7 @@ command :create do |c|
 
   c.option '-n', '--name NAME', 'Target name from the corresponding .longbow.json file.'
   c.option '-d', '--directory DIRECTORY', 'Path where the .xcproj or .xcworkspace file && the .longbow.json file live.'
-  c.option '-s', '--screenshots', 'Creates screenshots from the current .longbow.screens file lives'
+  c.option '-s', '--screenshots', 'Creates screenshots from where the current .longbow.screens file lives.'
 
   c.action do |args, options|
     # Set Up
