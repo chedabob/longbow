@@ -21,7 +21,7 @@ module Longbow
     proj.targets.each do |t|
       if t.to_s == target
         @target = t
-        puts target + ' FOUND'
+        Longbow::green '  ' + target + ' found.'
       end
     end
 
@@ -57,9 +57,11 @@ module Longbow
           phase.shell_script = b.shell_script
         end
       end
+
+      Longbow::green '  ' + target + ' created.'
     else
       puts
-      Longbow::Red 'Target Creation failed for target named: ' + target
+      Longbow::red 'Target Creation failed for target named: ' + target
       puts
     end
 

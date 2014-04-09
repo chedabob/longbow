@@ -52,10 +52,7 @@ command :create do |c|
 
     # Begin
     @targets.each do |t|
-      puts t
-      puts @directory
       Longbow::update_target @directory, t
-      puts
     end
   end
 end
