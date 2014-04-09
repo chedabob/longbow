@@ -11,22 +11,34 @@ command :install do |c|
   c.action do |args, options|
     @directory = options.directory ? options.directory : Dir.pwd
     @json_path = @directory + '/.longbow.json'
-    @screens_path = @directory + '/.longbow.screens'
 
     if File.exist?(@json_path)
       Longbow::red '  .longbow.json already exists at ' + @json_path
     else
       File.open(@directory + '/.longbow.json', 'w') do |f|
-        f.write('{"TargetName":{"icon_url":"https://somewhere.net/img.png", "info_plist":{"CFBundleId":"com.company.target"}}}')
+        f.write('{
+	"targets":[
+		{
+			"name":"TargetName",
+			"icon_url":"https://somewhere.net/img.png",
+			"info_plist": {
+        		"CFBundleId":"com.company.target"
+      		}
+		},
+		{
+			"name":"Target2",
+			"icon_path":"/relative/path/to/file.png",
+			"info_plist": {
+        		"CFBundleId":"com.company.target"
+      		}
+		}
+	],
+ 	"global_info_keys":{
+ 		"somekey":"somevalue"
+ 	}
+}')
       end
       Longbow::green '  .longbow.json created'
-    end
-
-    if File.exist?(@screens_path)
-      Longbow::red '  .longbow.screens already exists at ' + @screens_path
-    else
-      File.open(@directory + '/.longbow.screens', 'w') {}
-      Longbow::green '  .longbow.screens created'
     end
   end
 end

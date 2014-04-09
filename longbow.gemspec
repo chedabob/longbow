@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'dotenv', '~> 0.7'
   spec.add_dependency 'mini_magick', '~> 3.7.0'
   spec.add_dependency 'xcodeproj'
+  spec.add_dependency 'json'
 
   spec.add_development_dependency "rake"
 

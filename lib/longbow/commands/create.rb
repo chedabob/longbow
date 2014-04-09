@@ -1,6 +1,8 @@
 $:.push File.expand_path('../../', __FILE__)
 require 'fileutils'
 require 'longbow/colors'
+require 'longbow/targets'
+require 'json'
 
 command :create do |c|
   c.syntax = 'longbow create [options]'
@@ -9,13 +11,12 @@ command :create do |c|
 
   c.option '-n', '--name NAME', 'Target name from the corresponding .longbow.json file.'
   c.option '-d', '--directory DIRECTORY', 'Path where the .xcproj or .xcworkspace file && the .longbow.json file live.'
-  c.option '-s', '--screenshots', 'Creates screenshots from where the current .longbow.screens file lives.'
 
   c.action do |args, options|
     # Set Up
-    @target_name = options.name
+    @target_name = options.name ? options.name : nil
     @directory = options.directory ? options.directory : Dir.pwd
-    @screenshots = options.screenshots ? options.screenshots : false
+    @targets = []
 
     # Check for .longbow.json
     @json_path = @directory + '/.longbow.json'
@@ -29,9 +30,32 @@ command :create do |c|
       next
     end
 
+    # Check for Target Name
+    json_contents = File.open(@json_path).read
+    obj = JSON.parse(json_contents)
+    if @target_name
+      obj['targets'].each do |t|
+        @targets << t['name'] if t['name'] == @target_name
+      end
+
+      if @targets.length == 0
+        puts
+        Longbow::red "Couldn't find a target named " + @target_name + " in the .longbow.json file."
+        puts
+        next
+      end
+    else
+      obj['targets'].each do |t|
+        @targets << t['name']
+      end
+    end
+
     # Begin
-    puts @target_name ? 'Target: ' + @target_name : 'No Target!'
-    puts @directory
-    puts @screenshots
+    @targets.each do |t|
+      puts t
+      puts @directory
+      Longbow::update_target @directory, t
+      puts
+    end
   end
 end

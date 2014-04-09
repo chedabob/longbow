@@ -10,6 +10,9 @@ module Longbow
       return false
     end
 
+    # Make directory
+    FileUtils::mkdir_p directory + '/Images.xcassets/' + target + '.appiconset/'
+
     image = MiniMagick::Image.open(directory + '/resources/' + image_name)
     if !image
       return false
@@ -65,6 +68,9 @@ module Longbow
       return false
     end
 
+    # Make directory
+    FileUtils::mkdir_p directory + '/Images.xcassets/' + target + '.appiconset/'
+
     # Write the JSON file
     File.open(directory + '/Images.xcassets/' + target + '.appiconset/Contents.json', 'w') do |f|
       f.write('{ "images" : [ ')
@@ -81,6 +87,7 @@ module Longbow
     end
 
     # Return true
+    Longbow::green ('  Created Images.xcassets Icon set for ' + target) if $VERBOSE
     return true
   end
 end
