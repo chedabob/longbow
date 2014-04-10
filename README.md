@@ -8,7 +8,7 @@ One codebase. Multiple App Store submissions with different icons, info.plist ke
 
 ```
 longbow install
-longbow create -n AppTargetName
+longbow shoot -n AppTargetName
 ```
 
 **About**
@@ -97,11 +97,13 @@ Now that you're set up - it's time to add a target. Make sure that you have upda
 
 What this does is goes to your `.longbow.json` file and looks for json{"targets"}{"NameOfTarget"} and tries to create a new Target in your app, and handles the various icons/info_plist additions specifically for this target. If your target already exists, it will just update the icon images and plist settings.
 
+If you leave off the `-n` option, it will run for all targets in the `.longbow.json` file.
+
 **Other Options**
 
 * `-d, --directory` - if not in the current directory, specify a new path
 
-`longbow create -n NameOfTarget -d ~/Path/To/App`
+`longbow shoot -n NameOfTarget -d ~/Path/To/App`
 
 ## Global Options
 
