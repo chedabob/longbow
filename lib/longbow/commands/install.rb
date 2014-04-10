@@ -22,7 +22,7 @@ command :install do |c|
 			"name":"TargetName",
 			"icon_url":"https://somewhere.net/img.png",
 			"info_plist": {
-        		"CFBundleId":"com.company.target1",
+        		"CFBundleIdentifier":"com.company.target1",
             	"ProprietaryKey":"Value"
       		}
 		},
@@ -30,7 +30,7 @@ command :install do |c|
 			"name":"TargetName2",
 			"icon_path":"/relative/path/to/file.png",
 			"info_plist": {
-        		"CFBundleId":"com.company.target2",
+        		"CFBundleIdentifier":"com.company.target2",
             	"ProprietaryKey":"Value2"
       		}
 		}
