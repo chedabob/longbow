@@ -50,89 +50,58 @@ Here's a basic gist of how to format your `.longbow.json` file:
 
 ```
 {
-    "device" : "iPad" or "iPhone" or "universal"
-    "orientations" : "portrait" or "landscape" or "universal"
-    "targets" : {
-        "NameOfTarget1" : {
-            "icon_url" : "https://someurl.com/img.jpg"
-            "info_plist" : {
-                "key1" : "value1"
-                "key2" : "value2"
-            }
-        }
-        "NameOfTarget2" : {
-            "icon_url" : "https://someurl.com/img.jpg"
-            "info_plist" : {
-                 "key1" : "value1"
-                 "key2" : "value2"
-                 }
-            }
-        }
-    }
+	"targets":[
+		{
+			"name":"TargetName",
+			"icon_url":"https://somewhere.net/img.png",
+			"info_plist": {
+        		"CFBundleId":"com.company.target1",
+            	"ProprietaryKey":"Value"
+      		}
+		},
+		{
+			"name":"TargetName2",
+			"icon_path":"/relative/path/to/file.png",
+			"info_plist": {
+        		"CFBundleId":"com.company.target2",
+            	"ProprietaryKey":"Value2"
+      		}
+		}
+	],
+ 	"global_info_keys":{
+ 		"somekey":"somevalue"
+ 	},
+    "devices":["iPhone","iPad"]
 }
 ```
 
 In the top-level of the JSON file, we have 3 key/value pairs:
 
-* `device`
-* `orientations`
 * `targets`
+* `devices`
+* `global_info_keys`
 
 The `targets` section contains nested key/value pairs for each specific target. Each target can contain the following keys:
 
-* `icon_url`
+* `icon_url` or `icon_path`
 * `info_plist`
+* `name`
 
-The `icon_url` key corresponds to the icon image. It will be downloaded from the web and stored in your project under a new folder called `Resources/YourTarget/icon1024x1024.png`, where it will then be resized depending on your device setting and added to the Images.xcassets file for that target. The `info_plist` key corresponds to another set of key/value pairs that will be added or updated in the info.plist file specifically for this target.
+The `icon_url` and `icon_path` key corresponds to the location of the icon image. It will be downloaded from the web if necessary, then resized depending on your device setting and added to the Images.xcassets file for that target. The `info_plist` key corresponds to another set of key/value pairs that will be added or updated in the info.plist file specifically for this target.
 
-## Formatting .longbow.screens
-
-Longbow also boasts the ability to take screenshots of your app in the simulator by following a basic task timeline. There are 3 options that represent actions.
-
-* TAP *screen points*
-* WAIT *seconds*
-* C
-
-TAP simulates tapping a point on screen, WAIT will pause for a duration and C captures a screenshot. Here's how this looks.
-
-```
-TAP p(33,120) l(33, 670)
-WAIT 0.5
-C
-TAP p(342,120) l(345, 670)
-WAIT 1.3
-C
-```
-
-The screenshot function just traverses this file in a linear order, top to bottom, and takes screenshots whenever C is read in on its own line. It error-handles commands and points that it cannot interpret.
-
-## Create a Target
+## Creating/Updating a Target
 
 Now that you're set up - it's time to add a target. Make sure that you have updated your `.longbow.json` file with the correct information for your target, and then run the following command inside the project directory.
 
-`longbow create -n NameOfTarget`
+`longbow shoot -n NameOfTarget`
 
-What this does is goes to your `.longbow.json` file and looks for json{"targets"}{"NameOfTarget"} and tries to create a new Target in your app, and handles the various icons/info_plist additions to make specifically for this target.
-
-**Other Options**
-
-* `-d, --directory` - if not in the current directory, specify a new path
-* `-s, --screenshots` - if you want to take screenshots
-
-`longbow create -n NameOfTarget -d ~/Path/To/App -s`
-
-## Update a Target
-
-Updating a target is very similar to creating one. Instead of the command `create` we will be using `update`.
-
-`longbow update -n NameOfTarget`
-
-This will update that specific target. If you leave the -n option off, it will update *ALL* targets in the `.longbow.json` file.
+What this does is goes to your `.longbow.json` file and looks for json{"targets"}{"NameOfTarget"} and tries to create a new Target in your app, and handles the various icons/info_plist additions specifically for this target. If your target already exists, it will just update the icon images and plist settings.
 
 **Other Options**
 
 * `-d, --directory` - if not in the current directory, specify a new path
-* `-s, --screenshots` - if you want to take screenshots
+
+`longbow create -n NameOfTarget -d ~/Path/To/App`
 
 ## Global Options
 

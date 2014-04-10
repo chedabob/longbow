@@ -1,78 +1,115 @@
 $:.push File.expand_path('../', __FILE__)
 require 'mini_magick'
 require 'colors'
+require 'xcodeproj'
+require 'open-uri'
 
 module Longbow
+
   # Resize Icon
-  def resize_icon(directory, image_name, target, iPhone, iPad)
+  def self.resize_icons(directory, t, obj)
     # Bad Params
-    if !directory || !image_name || !(iPhone || iPad) || !target
+    if !directory || !t
       return false
+    end
+
+    # Set Up
+    target = t['name']
+
+    # Get Device Information
+    iPhone = false
+    iPad = false
+    if obj['devices']
+      obj['devices'].each do |d|
+        iPhone = true if d == 'iPhone'
+        iPad = true if d == 'iPad'
+      end
+    end
+
+    # Get Image Information
+    img_path = ''
+    if t['icon_url']
+      img_path = self.path_for_downloaded_image_from_url directory, target, t['icon_url']
+    elsif t['icon_path']
+      img_path = directory + '/' + t['icon_path']
     end
 
     # Make directory
-    FileUtils::mkdir_p directory + '/Images.xcassets/' + target + '.appiconset/'
+    img_dir = make_asset_directory directory, target
 
-    image = MiniMagick::Image.open(directory + '/resources/' + image_name)
-    if !image
-      return false
-    end
+    # Make image
+    image = MiniMagick::Image.open(img_path)
+    return false unless image
 
+    # Size for iPhone
     if iPhone
       image.resize '120x120'
-      image.write  directory + '/Images.xcassets/' + target + '.appiconset/icon120x120.png'
+      image.write  img_dir + '/icon120x120.png'
       image.resize '114x114'
-      image.write  directory + '/Images.xcassets/' + target + '.appiconset/icon114x114.png'
+      image.write  img_dir + '/icon114x114.png'
       image.resize '80x80'
-      image.write  directory + '/Images.xcassets/' + target + '.appiconset/icon80x80.png'
+      image.write  img_dir + '/icon80x80.png'
       image.resize '58x58'
-      image.write  directory + '/Images.xcassets/' + target + '.appiconset/icon58x58.png'
+      image.write  img_dir + '/icon58x58.png'
       image.resize '57x57'
-      image.write  directory + '/Images.xcassets/' + target + '.appiconset/icon57x57.png'
+      image.write  img_dir + '/icon57x57.png'
       image.resize '29x29'
-      image.write  directory + '/Images.xcassets/' + target + '.appiconset/icon29x29.png'
-      Longbow::green ('  Created iPhone icon images for ' + target) if $VERBOSE
+      image.write  img_dir + '/icon29x29.png'
+      Longbow::green ('  - Created iPhone icon images for ' + target) if $verbose
     end
 
     if iPad
       image.resize '152x152'
-      image.write  directory + '/Images.xcassets/' + target + '.appiconset/icon152x152.png'
+      image.write  img_dir + '/icon152x152.png'
       image.resize '144x144'
-      image.write  directory + '/Images.xcassets/' + target + '.appiconset/icon144x144.png'
+      image.write  img_dir + '/icon144x144.png'
       image.resize '100x100'
-      image.write  directory + '/Images.xcassets/' + target + '.appiconset/icon100x100.png'
+      image.write  img_dir + '/icon100x100.png'
       image.resize '80x80'
-      image.write  directory + '/Images.xcassets/' + target + '.appiconset/icon80x80.png'
+      image.write  img_dir + '/icon80x80.png'
       image.resize '76x76'
-      image.write  directory + '/Images.xcassets/' + target + '.appiconset/icon76x76.png'
+      image.write  img_dir + '/icon76x76.png'
       image.resize '72x72'
-      image.write  directory + '/Images.xcassets/' + target + '.appiconset/icon72x72.png'
+      image.write  img_dir + '/icon72x72.png'
       image.resize '58x58'
-      image.write  directory + '/Images.xcassets/' + target + '.appiconset/icon58x58.png'
+      image.write  img_dir + '/icon58x58.png'
       image.resize '50x50'
-      image.write  directory + '/Images.xcassets/' + target + '.appiconset/icon50x50.png'
+      image.write  img_dir + '/icon50x50.png'
       image.resize '40x40'
-      image.write  directory + '/Images.xcassets/' + target + '.appiconset/icon40x40.png'
+      image.write  img_dir + '/icon40x40.png'
       image.resize '29x29'
-      image.write  directory + '/Images.xcassets/' + target + '.appiconset/icon29x29.png'
-      Longbow::green ('  Created iPad icon images for ' + target) if $VERBOSE
+      image.write  img_dir + '/icon29x29.png'
+      Longbow::green ('  - Created iPad icon images for ' + target) if $verbose
     end
-
     return true
   end
 
+
   # Create JSON
-  def write_json_for_icons(directory, target, iPhone, iPad)
+  def self.write_json_for_icons(directory, t, obj)
     # Bad Params
-    if !directory || !target || !(iPhone || iPad)
+    if !directory || !t
       return false
     end
 
+    # Set Up
+    target = t['name']
+
+    # Get Device Information
+    iPhone = false
+    iPad = false
+    if obj['devices']
+      obj['devices'].each do |d|
+        iPhone = true if d == 'iPhone'
+        iPad = true if d == 'iPad'
+      end
+    end
+
     # Make directory
-    FileUtils::mkdir_p directory + '/Images.xcassets/' + target + '.appiconset/'
+    img_dir = make_asset_directory directory, target
 
     # Write the JSON file
-    File.open(directory + '/Images.xcassets/' + target + '.appiconset/Contents.json', 'w') do |f|
+    File.open(img_dir + '/Contents.json', 'w') do |f|
       f.write('{ "images" : [ ')
 
       if iPhone
@@ -87,7 +124,44 @@ module Longbow
     end
 
     # Return true
-    Longbow::green ('  Created Images.xcassets Icon set for ' + target) if $VERBOSE
+    Longbow::green ('  - Created Images.xcassets icon set for ' + target) if $verbose
     return true
   end
+
+
+  # Make Directory for Images.xcassets
+  def self.make_asset_directory directory, target
+    asset_path = assets_file_path directory
+    full_path = asset_path + '/' + target + '.appiconset/'
+    FileUtils::mkdir_p full_path
+    return full_path
+  end
+
+
+  def self.assets_file_path directory
+    asset_path = ''
+    Dir.glob(directory + '/**/*/').each do |d|
+      searching = 'Images.xcassets/'
+      asset_path = d if d.slice(d.length - searching.length, searching.length) == searching
+    end
+
+    return asset_path
+  end
+
+
+  # Download Image from URL
+  def self.path_for_downloaded_image_from_url directory, target, url
+    img_path = directory + '/resources/icons/'
+    img_file_name = target + '.png'
+    return (img_path + img_file_name) if File.exists? img_path+img_file_name
+
+    FileUtils::mkdir_p img_path
+    File.open(img_path + img_file_name, 'wb') do |f|
+      f.write open(url).read
+    end
+
+    return img_path + img_file_name
+  end
+
+
 end
