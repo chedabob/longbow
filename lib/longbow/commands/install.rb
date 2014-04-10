@@ -41,7 +41,7 @@ command :install do |c|
     "devices":["iPhone","iPad"]
 }')
       end
-      Longbow::green '  .longbow.json created'
+      Longbow::green '  .longbow.json created' unless $nolog
     end
   end
 end

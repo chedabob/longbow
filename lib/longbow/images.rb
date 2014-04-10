@@ -79,7 +79,7 @@ module Longbow
       image.write  img_dir + '/icon40x40.png'
       image.resize '29x29'
       image.write  img_dir + '/icon29x29.png'
-      Longbow::green ('  - Created iPad icon images for ' + target) if $verbose
+      Longbow::green ('  - Created iPad icon images for ' + target) unless $nolog
     end
     return true
   end
@@ -124,7 +124,7 @@ module Longbow
     end
 
     # Return true
-    Longbow::green ('  - Created Images.xcassets icon set for ' + target) if $verbose
+    Longbow::green ('  - Created Images.xcassets icon set for ' + target) unless $nolog
     return true
   end
 

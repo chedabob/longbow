@@ -8,12 +8,16 @@ One codebase. Multiple App Store submissions with different icons, info.plist ke
 
 ```
 longbow install
-longbow shoot -n AppTargetName
+longbow shoot
 ```
 
 **About**
 
 Longbow duplicates the main target in your `.xcworkspace` or `.xcodeproj` file, then reads from a JSON file to fill out the rest of your target. It looks for certain keys and creates such things like taking an icon image and resizing it for the various icons you'll need, and adding keys to the info.plist file for that target. The goal was to be practically autonomous in creating new targets and apps.
+
+**Requirements**
+
+Longbow requires Xcode 5+, and your app must use the new .xcassets paradigm for icons, launch screens, etc.
 
 ## Table of Contents
 
@@ -55,7 +59,7 @@ Here's a basic gist of how to format your `.longbow.json` file:
 			"name":"TargetName",
 			"icon_url":"https://somewhere.net/img.png",
 			"info_plist": {
-        		"CFBundleId":"com.company.target1",
+        		"CFBundleIdentifier":"com.company.target1",
             	"ProprietaryKey":"Value"
       		}
 		},
@@ -63,7 +67,7 @@ Here's a basic gist of how to format your `.longbow.json` file:
 			"name":"TargetName2",
 			"icon_path":"/relative/path/to/file.png",
 			"info_plist": {
-        		"CFBundleId":"com.company.target2",
+        		"CFBundleIdentifier":"com.company.target2",
             	"ProprietaryKey":"Value2"
       		}
 		}
@@ -107,7 +111,7 @@ If you leave off the `-n` option, it will run for all targets in the `.longbow.j
 
 ## Global Options
 
-`--verbose` will log a TON of information about what's happening to the console.
+`--dontlog` will not log the status/operations to the console.
 
 `--help` will fill you in on what you need to do for an action.
 

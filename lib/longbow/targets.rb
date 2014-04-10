@@ -19,7 +19,7 @@ module Longbow
     proj.targets.each do |t|
       if t.to_s == target
         @target = t
-        Longbow::green '  ' + target + ' found.' if $verbose
+        Longbow::green '  ' + target + ' found.' unless $nolog
       end
     end
 
@@ -46,6 +46,7 @@ module Longbow
     File.open(target_plist_path, 'w') do |f|
       f.write(plist_text)
     end
+    Longbow::green '  - ' + target + '-info.plist Updated.' unless $nolog
 
 
     # Add Build Settings
@@ -101,7 +102,7 @@ module Longbow
         end
       end
 
-      Longbow::green '  ' + target + ' created.' if $verbose
+      Longbow::green '  ' + target + ' created.' unless $nolog
     else
       puts
       Longbow::red '  Target Creation failed for target named: ' + target

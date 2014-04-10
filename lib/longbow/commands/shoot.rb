@@ -56,8 +56,8 @@ command :shoot do |c|
       Longbow::update_target @directory, t['name'], obj['global_info_keys'], t['info_plist']
       Longbow::resize_icons @directory, t, obj
       Longbow::write_json_for_icons @directory, t, obj
-      Longbow::green '  Finished: ' + t['name']
-      puts
+      Longbow::green '  Finished: ' + t['name'] unless $nolog
+      puts unless $nolog
     end
   end
 end
