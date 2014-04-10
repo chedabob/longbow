@@ -23,10 +23,8 @@ Longbow requires Xcode 5+, and your app must use the new .xcassets paradigm for 
 
 * [Installation](#installation)
 * [Set Up](#set-up)
-* [Formatting .longbow.json](#formatting-longbow-json)
-* [Formatting .longbow.screens](#formatting-longbow-screens)
+* [Formatting longbow.json](#formatting-longbow-json)
 * [Create a Target](#create-a-target)
-* [Update a Target](#update-a-target)
 * [Global Options](#global-options)
 * [Contributing](#contributing)
 
@@ -46,11 +44,11 @@ Or install it yourself as:
 
 ## Set Up
 
-Run `longbow install` in the directory where your `.xcworkspace` or `.xcodeproj` file lives. This will create two files, `.longbow.{json,screens}`, where they will be used to build out from here. You are almost ready to start creating new targets
+Run `longbow install` in the directory where your `.xcworkspace` or `.xcodeproj` file lives. This will create a file, `longbow.json`, where they will be used to build out from here. You are almost ready to start creating new targets
 
 ## Formatting .longbow.json
 
-Here's a basic gist of how to format your `.longbow.json` file:
+Here's a basic gist of how to format your `longbow.json` file:
 
 ```
 {
@@ -95,7 +93,7 @@ The `icon_url` and `icon_path` key corresponds to the location of the icon image
 
 ## Creating/Updating a Target
 
-Now that you're set up - it's time to add a target. Make sure that you have updated your `.longbow.json` file with the correct information for your target, and then run the following command inside the project directory.
+Now that you're set up - it's time to add a target. Make sure that you have updated your `longbow.json` file with the correct information for your target, and then run the following command inside the project directory.
 
 `longbow shoot -n NameOfTarget`
 

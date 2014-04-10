@@ -6,16 +6,16 @@ command :install do |c|
   c.syntax = 'longbow install [options]'
   c.summary = 'Creates the required files in your directory.'
   c.description = ''
-  c.option '-d', '--directory DIRECTORY', 'Path where the .xcproj or .xcworkspace file && the .longbow.json file live.'
+  c.option '-d', '--directory DIRECTORY', 'Path where the .xcproj or .xcworkspace file && the longbow.json file live.'
 
   c.action do |args, options|
     @directory = options.directory ? options.directory : Dir.pwd
-    @json_path = @directory + '/.longbow.json'
+    @json_path = @directory + '/longbow.json'
 
     if File.exist?(@json_path)
-      Longbow::red '  .longbow.json already exists at ' + @json_path
+      Longbow::red '  longbow.json already exists at ' + @json_path
     else
-      File.open(@directory + '/.longbow.json', 'w') do |f|
+      File.open(@json_path, 'w') do |f|
         f.write('{
 	"targets":[
 		{
@@ -41,7 +41,7 @@ command :install do |c|
     "devices":["iPhone","iPad"]
 }')
       end
-      Longbow::green '  .longbow.json created' unless $nolog
+      Longbow::green '  longbow.json created' unless $nolog
     end
   end
 end

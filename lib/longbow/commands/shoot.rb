@@ -10,8 +10,8 @@ command :shoot do |c|
   c.summary = 'Creates/updates a target or all targets in your workspace or project.'
   c.description = ''
 
-  c.option '-n', '--name NAME', 'Target name from the corresponding .longbow.json file.'
-  c.option '-d', '--directory DIRECTORY', 'Path where the .xcodeproj or .xcworkspace file && the .longbow.json file live.'
+  c.option '-n', '--name NAME', 'Target name from the corresponding longbow.json file.'
+  c.option '-d', '--directory DIRECTORY', 'Path where the .xcodeproj or .xcworkspace file && the longbow.json file live.'
 
   c.action do |args, options|
     # Set Up
@@ -20,10 +20,10 @@ command :shoot do |c|
     @targets = []
 
     # Check for .longbow.json
-    @json_path = @directory + '/.longbow.json'
+    @json_path = @directory + '/longbow.json'
     if !File.exists?(@json_path)
       puts
-      Longbow::red "  Couldn't find .longbow.json at " + @json_path
+      Longbow::red "  Couldn't find longbow.json at " + @json_path
       puts
       puts "  Run this command to install the correct files:"
       puts "  longbow install"

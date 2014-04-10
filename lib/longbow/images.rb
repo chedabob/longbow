@@ -153,8 +153,6 @@ module Longbow
   def self.path_for_downloaded_image_from_url directory, target, url
     img_path = directory + '/resources/icons/'
     img_file_name = target + '.png'
-    return (img_path + img_file_name) if File.exists? img_path+img_file_name
-
     FileUtils::mkdir_p img_path
     File.open(img_path + img_file_name, 'wb') do |f|
       f.write open(url).read
