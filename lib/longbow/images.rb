@@ -37,12 +37,10 @@ module Longbow
     # Make directory
     img_dir = make_asset_directory directory, target
 
-    # Make image
-    image = MiniMagick::Image.open(img_path)
-    return false unless image
-
     # Size for iPhone
     if iPhone
+      image = MiniMagick::Image.open(img_path)
+      return false unless image
       image.resize '120x120'
       image.write  img_dir + '/icon120x120.png'
       image.resize '114x114'
@@ -59,6 +57,8 @@ module Longbow
     end
 
     if iPad
+      image = MiniMagick::Image.open(img_path)
+      return false unless image
       image.resize '152x152'
       image.write  img_dir + '/icon152x152.png'
       image.resize '144x144'
