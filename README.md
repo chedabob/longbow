@@ -97,7 +97,7 @@ Now that you're set up - it's time to add a target. Make sure that you have upda
 
 `longbow shoot -n NameOfTarget`
 
-What this does is goes to your `.longbow.json` file and looks for json{"targets"}{"NameOfTarget"} and tries to create a new Target in your app, and handles the various icons/info_plist additions specifically for this target. If your target already exists, it will just update the icon images and plist settings.
+What this does is goes to your `.longbow.json` file and looks for the correct target dictionary, and tries to create a new Target in your app. It then handles the various icons/info_plist additions specifically for this target. If your target already exists, it will just update the icon images and plist settings.
 
 If you leave off the `-n` option, it will run for all targets in the `.longbow.json` file.
 
