@@ -8,6 +8,7 @@ module Longbow
 
   # Create Plist from Original Plist Content
   def self.create_plist_from_old_plist old_plist, info_hash, global_hash
+    return '' unless old_plist && info_hash && global_hash
     plist_text = old_plist
     [info_hash,global_hash].each do |hash|
       hash.each_key do |k|
@@ -26,6 +27,8 @@ module Longbow
 
   # Recursively create Plist Values for a given object
   def self.recursive_plist_value_for_value value
+    return '' unless value
+
     # Check Number
     if value.kind_of?(Numeric)
       return '<real>' + value.to_s + '</real>'

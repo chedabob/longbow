@@ -5,6 +5,11 @@ require 'plist'
 module Longbow
 
   def self.update_target directory, target, global_keys, info_keys
+    unless directory && target && global_keys && info_keys
+      Longbow::red '  Invalid parameters. Could not create/update target named: ' + target
+      return false
+    end
+
     # Find Project File
     project_paths = []
     Dir.foreach(directory) do |fname|

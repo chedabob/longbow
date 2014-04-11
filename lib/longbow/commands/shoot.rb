@@ -31,9 +31,15 @@ command :shoot do |c|
       next
     end
 
-    # Check for Target Name
+    # Create an Object from JSON
     json_contents = File.open(@json_path).read
+    unless !!JSON.parse(json_contents)
+      Longbow::red '  Invalid JSON - lint it, and try again.'
+      next
+    end
     obj = JSON.parse(json_contents)
+
+    # Check for Target Name
     if @target_name
       obj['targets'].each do |t|
         @targets << t if t['name'] == @target_name

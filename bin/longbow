@@ -13,7 +13,7 @@ HighLine.track_eof = false # Fix for built-in Ruby
 program :version, Longbow::VERSION
 program :description, 'Create duplicate Targets for your Xcode workspace/project.'
 
-program :help, 'Author', 'Intermark Group <interactive@intermarkgroup.com>'
+program :help, 'Author', 'Benjamin Gordon (@bennyguitar) for Intermark Group <interactive@intermarkgroup.com>'
 program :help, 'Website', 'https://github.com/intermark'
 program :help_formatter, :compact
 
