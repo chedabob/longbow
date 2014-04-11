@@ -1,5 +1,6 @@
 require 'xcodeproj'
 require 'colors'
+require 'plist'
 
 module Longbow
 
@@ -31,18 +32,7 @@ module Longbow
     main_plist = main_target.build_configurations[0].build_settings['INFOPLIST_FILE']
     main_plist_contents = File.read(directory + '/' + main_plist)
     target_plist_path = directory + '/' + main_plist.split('/')[0] + '/' + target + '-info.plist'
-    plist_text = main_plist_contents
-    [info_keys,global_keys].each do |keys|
-      keys.each_key do |k|
-        value = keys[k]
-        matches = plist_text.match /<key>#{k}<\/key>\s*<string>.*<\/string>/
-        if matches
-          plist_text = plist_text.sub(matches[0], "<key>" + k + "</key>\n<string>" + value + "</string>")
-        else
-          plist_text = plist_text.sub(/<\/dict>\s*<\/plist>/, "<key>" + k + "</key>\n<string>" + value + "</string></dict></plist>")
-        end
-      end
-    end
+    plist_text = Longbow::create_plist_from_old_plist main_plist_contents, info_keys, global_keys
     File.open(target_plist_path, 'w') do |f|
       f.write(plist_text)
     end
