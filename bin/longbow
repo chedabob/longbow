@@ -11,7 +11,7 @@ require 'longbow'
 HighLine.track_eof = false # Fix for built-in Ruby
 
 program :version, Longbow::VERSION
-program :description, 'Create duplicate Targets for your Xcode workspace/project.'
+program :description, 'One codebase. Multiple App Store submission targets with different icons, launch images, info.plist keys, etc.'
 
 program :help, 'Author', 'Benjamin Gordon (@bennyguitar) for Intermark Group <interactive@intermarkgroup.com>'
 program :help, 'Website', 'https://github.com/intermark'

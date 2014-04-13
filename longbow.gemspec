@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Longbow::VERSION
   spec.authors       = ["Intermark Interactive"]
   spec.email         = ["interactive@intermarkgroup.com"]
-  spec.description   = "One codebase. Multiple App Store submission targets with different icons, info.plist keys, etc."
+  spec.description   = "One codebase. Multiple App Store submission targets with different icons, launch images, info.plist keys, etc."
   spec.summary       = "Better target creation for one iOS codebase."
   spec.homepage      = "https://github.com/intermark/longbow"
   spec.license       = "MIT"

@@ -21,6 +21,7 @@ command :install do |c|
 		{
 			"name":"TargetName",
 			"icon_url":"https://somewhere.net/img.png",
+			"launch_phone_p_url":"https://somewhere.net/img2.png",
 			"info_plist": {
         		"CFBundleIdentifier":"com.company.target1",
             	"ProprietaryKey":"Value"
@@ -29,6 +30,7 @@ command :install do |c|
 		{
 			"name":"TargetName2",
 			"icon_path":"/relative/path/to/file.png",
+			"launch_phone_p_path":"/relative/path/to/file2.png",
 			"info_plist": {
         		"CFBundleIdentifier":"com.company.target2",
             	"ProprietaryKey":"Value2"

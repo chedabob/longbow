@@ -2,7 +2,7 @@
 
 **Problem**
 
-One codebase. Multiple App Store submission targets with different icons, info.plist keys, etc.
+One codebase. Multiple App Store submission targets with different icons, launch images, info.plist keys, etc.
 
 **Solution**
 
@@ -49,6 +49,7 @@ Here's a basic gist of how to format your `longbow.json` file:
 		{
 			"name":"TargetName",
 			"icon_url":"https://somewhere.net/img.png",
+			"launch_phone_p_url":"https://somewhere.net/img2.png",
 			"info_plist": {
         		"CFBundleIdentifier":"com.company.target1",
             	"ProprietaryKey":"Value"
@@ -57,6 +58,7 @@ Here's a basic gist of how to format your `longbow.json` file:
 		{
 			"name":"TargetName2",
 			"icon_path":"/relative/path/to/file.png",
+			"launch_phone_p_path":"/relative/path/to/file2.png",
 			"info_plist": {
         		"CFBundleIdentifier":"com.company.target2",
             	"ProprietaryKey":"Value2"
@@ -79,10 +81,14 @@ In the top-level of the JSON file, we have 3 key/value pairs:
 The `targets` section contains nested key/value pairs for each specific target. Devices holds an array of "iPhone" and/or "iPad". "global_info_keys" contains key/value pairs that you'd like to add to the info.plist file for all targets in this JSON file. Each target can contain the following keys:
 
 * `icon_url` or `icon_path`
+* `launch_phone_p_url` or `launch_phone_p_path`
+* `launch_phone_l_url` or `launch_phone_l_path`
+* `launch_tablet_p_url` or `launch_tablet_p_path`
+* `launch_tablet_l_url` or `launch_tablet_l_path`
 * `info_plist`
 * `name`
 
-The `icon_url` and `icon_path` key corresponds to the location of the icon image. It will be downloaded from the web if necessary, then resized depending on your device setting and added to the Images.xcassets file for that target. The `info_plist` key corresponds to another set of key/value pairs that will be added or updated in the info.plist file specifically for this target.
+The `icon_url` and `icon_path` key corresponds to the location of the icon image. It will be downloaded from the web if necessary, then resized depending on your device setting and added to the Images.xcassets file for that target. The same goes for the launch image keys. The p and l parts correspond to portrait and landscape orientation. The `info_plist` key corresponds to another set of key/value pairs that will be added or updated in the info.plist file specifically for this target.
 
 **Note:** `info_plist` takes precedence over `global_info_keys` for two of the same keys in both places.
 
