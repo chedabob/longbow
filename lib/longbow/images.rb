@@ -178,6 +178,7 @@ module Longbow
     phone_landscape = t['launch_phone_l_url'] || t['launch_phone_l_path']
     tablet_portrait = t['launch_tablet_p_url'] || t['launch_tablet_p_path']
     tablet_landscape = t['launch_tablet_l_url'] || t['launch_tablet_l_path']
+    return false unless phone_portrait || phone_landscape || tablet_landscape || tablet_portrait
 
     # Make Directory
     img_dir = make_asset_directory directory, target, '.launchimage/'
@@ -268,6 +269,10 @@ module Longbow
 
       f.write('],"info" : {"version" : 1,"author" : "xcode"}}')
     end
+
+    # Return true
+    Longbow::green ('  - Created Images.xcassets launch image set for ' + target) unless $nolog
+    return true
   end
 
 
