@@ -6,15 +6,12 @@ require 'open-uri'
 
 module Longbow
 
-  # Resize Icon
-  def self.resize_icons(directory, t, obj)
+  # Images
+  def self.create_images directory, t, obj
     # Bad Params
-    if !directory || !t
+    if !directory || !t || !obj
       return false
     end
-
-    # Set Up
-    target = t['name']
 
     # Get Device Information
     iPhone = false
@@ -26,87 +23,130 @@ module Longbow
       end
     end
 
+    # Resize Icons
+    resize_icons directory, t, iPhone, iPad
+
+    # Resize Launch Images
+    resize_launch_images directory, t
+
+    # Write JSON for Icon Assets
+    write_json_for_icons directory, t, iPhone, iPad
+
+    # Write JSON for Launch Assets
+
+  end
+
+
+  # Create & Resize Icons
+  def self.resize_icons directory, t, iPhone, iPad
+    # Set Up
+    target = t['name']
+
     # Get Image Information
     img_path = ''
     if t['icon_url']
-      img_path = self.path_for_downloaded_image_from_url directory, target, t['icon_url']
+      img_path = self.path_for_downloaded_image_from_url directory, target, t['icon_url'], 'icons'
     elsif t['icon_path']
       img_path = directory + '/' + t['icon_path']
     end
 
     # Make directory
-    img_dir = make_asset_directory directory, target
+    img_dir = make_asset_directory directory, target, '.appiconset/'
 
     # Size for iPhone
     if iPhone
       image = MiniMagick::Image.open(img_path)
       return false unless image
-      image.resize '120x120'
-      image.write  img_dir + '/icon120x120.png'
-      image.resize '114x114'
-      image.write  img_dir + '/icon114x114.png'
-      image.resize '80x80'
-      image.write  img_dir + '/icon80x80.png'
-      image.resize '58x58'
-      image.write  img_dir + '/icon58x58.png'
-      image.resize '57x57'
-      image.write  img_dir + '/icon57x57.png'
-      image.resize '29x29'
-      image.write  img_dir + '/icon29x29.png'
-      Longbow::green ('  - Created iPhone icon images for ' + target) if $verbose
+      ['120x120', '114x114', '80x80', '58x58', '57x57', '29x29'].each do |size|
+        resize_image_to_directory img_dir, image, size, 'icon'
+      end
     end
 
+    # iPad
     if iPad
       image = MiniMagick::Image.open(img_path)
       return false unless image
-      image.resize '152x152'
-      image.write  img_dir + '/icon152x152.png'
-      image.resize '144x144'
-      image.write  img_dir + '/icon144x144.png'
-      image.resize '100x100'
-      image.write  img_dir + '/icon100x100.png'
-      image.resize '80x80'
-      image.write  img_dir + '/icon80x80.png'
-      image.resize '76x76'
-      image.write  img_dir + '/icon76x76.png'
-      image.resize '72x72'
-      image.write  img_dir + '/icon72x72.png'
-      image.resize '58x58'
-      image.write  img_dir + '/icon58x58.png'
-      image.resize '50x50'
-      image.write  img_dir + '/icon50x50.png'
-      image.resize '40x40'
-      image.write  img_dir + '/icon40x40.png'
-      image.resize '29x29'
-      image.write  img_dir + '/icon29x29.png'
-      Longbow::green ('  - Created iPad icon images for ' + target) unless $nolog
+      ['152x152', '144x144', '100x100', '80x80', '76x76', '72x72', '58x58', '50x50', '40x40', '29x29'].each do |size|
+        resize_image_to_directory img_dir, image, size, 'icon'
+      end
     end
+
+    Longbow::green ('  - Created Icon images for ' + target) unless $nolog
     return true
   end
 
 
-  # Create JSON
-  def self.write_json_for_icons(directory, t, obj)
-    # Bad Params
-    if !directory || !t
-      return false
-    end
-
+  # Create & Resize Launch Images
+  def self.resize_launch_images directory, t
     # Set Up
     target = t['name']
 
-    # Get Device Information
-    iPhone = false
-    iPad = false
-    if obj['devices']
-      obj['devices'].each do |d|
-        iPhone = true if d == 'iPhone'
-        iPad = true if d == 'iPad'
+    ['launch_phone_p', 'launch_phone_l', 'launch_tablet_p', 'launch_tablet_l'].each do |key|
+      img_path = ''
+      if t[key + '_url']
+        img_path = self.path_for_downloaded_image_from_url directory, key + '_' + target, t[key + '_url'], 'launch'
+      elsif t[key + '_path']
+        img_path = directory + '/' + t[key + '_path']
+      else
+        next
+      end
+
+      # Make directory
+      img_dir = make_asset_directory directory, target, '.launchimage/'
+
+      # Make resize sizes
+      sizes = []
+      if key == 'launch_phone_p'
+        sizes = ['640x1136','640x960']
+      elsif key == 'launch_phone_l'
+        sizes = ['1136x640','960x640']
+      elsif key == 'launch_tablet_p'
+        sizes = ['1536x2048','768x1024']
+      elsif key == 'launch_tablet_l'
+        sizes = ['2048x1536','1024x768']
+      end
+
+      # Resize Images
+      image = MiniMagick::Image.open(img_path)
+      return false unless image
+      sizes.each do |size|
+        resize_image_to_directory img_dir, image, size, key + '_'
       end
     end
 
+    Longbow::green ('  - Created Launch images for ' + target) unless $nolog
+    return true
+  end
+
+
+  # Resize Image to Directory
+  def self.resize_image_to_directory directory, image, size, tag
+    sizes = size.split('x')
+    new_w = Integer(sizes[0])
+    new_h = Integer(sizes[1])
+    w = image[:width]
+    h = image[:height]
+    if w < h
+      m = new_w.to_f/w
+      new_size = new_w.to_s + 'x' + (h*m).to_i.to_s
+    else
+      m = new_h.to_f/h
+      new_size = (w*m).to_i.to_s + 'x' + new_h.to_s
+    end
+
+    image.resize new_size
+    image.crop size + '+0+0' unless new_size == size
+    image.write  directory + '/' + tag + size + '.png'
+  end
+
+
+  # Create JSON
+  def self.write_json_for_icons directory, t, iPhone, iPad
+    # Set Up
+    target = t['name']
+
     # Make directory
-    img_dir = make_asset_directory directory, target
+    img_dir = make_asset_directory directory, target, '.appiconset/'
 
     # Write the JSON file
     File.open(img_dir + '/Contents.json', 'w') do |f|
@@ -129,20 +169,20 @@ module Longbow
   end
 
 
-  # Make Directory for Images.xcassets
-  def self.make_asset_directory directory, target
+  # Asset Directory Methods
+  def self.make_asset_directory directory, target, path_extension
     asset_path = assets_file_path directory
-    full_path = asset_path + '/' + target + '.appiconset/'
+    full_path = asset_path + '/' + target + path_extension
     FileUtils::mkdir_p full_path
     return full_path
   end
-
 
   def self.assets_file_path directory
     asset_path = ''
     Dir.glob(directory + '/**/*/').each do |d|
       searching = 'Images.xcassets/'
       asset_path = d if d.slice(d.length - searching.length, searching.length) == searching
+      break if asset_path.length > 0
     end
 
     return asset_path
@@ -150,9 +190,9 @@ module Longbow
 
 
   # Download Image from URL
-  def self.path_for_downloaded_image_from_url directory, target, url
-    img_path = directory + '/resources/icons/'
-    img_file_name = target + '.png'
+  def self.path_for_downloaded_image_from_url directory, filename, url, folder
+    img_path = directory + '/resources/'+ folder + '/'
+    img_file_name = filename + '.png'
     FileUtils::mkdir_p img_path
     File.open(img_path + img_file_name, 'wb') do |f|
       f.write open(url).read

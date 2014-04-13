@@ -2,18 +2,18 @@
 
 **Problem**
 
-One codebase. Multiple App Store submissions with different icons, info.plist keys, etc.
+One codebase. Multiple App Store submission targets with different icons, info.plist keys, etc.
 
 **Solution**
 
 ```
-longbow install
-longbow shoot
+$ longbow install
+$ longbow shoot
 ```
 
 **About**
 
-Longbow duplicates the main target in your `.xcworkspace` or `.xcodeproj` file, then reads from a JSON file to fill out the rest of your target. It looks for certain keys and creates such things like taking an icon image and resizing it for the various icons you'll need, and adding keys to the info.plist file for that target. The goal was to be practically autonomous in creating new targets and apps.
+Longbow is a command-line run ruby gem that duplicates the main target in your `.xcworkspace` or `.xcodeproj` file, then reads from a JSON file to fill out the rest of your new target. It looks for certain keys and does things like taking an icon image and resizing it for the various icons you'll need, and adding keys to the info.plist file for that target. The goal was to be practically autonomous in creating new targets and apps.
 
 **Requirements**
 
@@ -26,19 +26,12 @@ Longbow requires Xcode 5+, and your app must use the new .xcassets paradigm for 
 * [Formatting longbow.json](#formatting-longbow-json)
 * [Create a Target](#create-a-target)
 * [Global Options](#global-options)
+* [The Future](#the-future)
 * [Contributing](#contributing)
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-    gem 'longbow'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
+Longbow is officially hosted on [RubyGems](http://rubygems.org/gems/longbow), so installation is a breeze:
 
     $ gem install longbow
 
@@ -46,7 +39,7 @@ Or install it yourself as:
 
 Run `longbow install` in the directory where your `.xcworkspace` or `.xcodeproj` file lives. This will create a file, `longbow.json`, where they will be used to build out from here. You are almost ready to start creating new targets
 
-## Formatting .longbow.json
+## Formatting longbow.json
 
 Here's a basic gist of how to format your `longbow.json` file:
 
@@ -83,7 +76,7 @@ In the top-level of the JSON file, we have 3 key/value pairs:
 * `devices`
 * `global_info_keys`
 
-The `targets` section contains nested key/value pairs for each specific target. Each target can contain the following keys:
+The `targets` section contains nested key/value pairs for each specific target. Devices holds an array of "iPhone" and/or "iPad". "global_info_keys" contains key/value pairs that you'd like to add to the info.plist file for all targets in this JSON file. Each target can contain the following keys:
 
 * `icon_url` or `icon_path`
 * `info_plist`
@@ -91,15 +84,17 @@ The `targets` section contains nested key/value pairs for each specific target. 
 
 The `icon_url` and `icon_path` key corresponds to the location of the icon image. It will be downloaded from the web if necessary, then resized depending on your device setting and added to the Images.xcassets file for that target. The `info_plist` key corresponds to another set of key/value pairs that will be added or updated in the info.plist file specifically for this target.
 
+**Note:** `info_plist` takes precedence over `global_info_keys` for two of the same keys in both places.
+
 ## Creating/Updating a Target
 
 Now that you're set up - it's time to add a target. Make sure that you have updated your `longbow.json` file with the correct information for your target, and then run the following command inside the project directory.
 
 `longbow shoot -n NameOfTarget`
 
-What this does is goes to your `.longbow.json` file and looks for the correct target dictionary, and tries to create a new Target in your app. It then handles the various icons/info_plist additions specifically for this target. If your target already exists, it will just update the icon images and plist settings.
+What this does is goes to your `longbow.json` file and looks for the correct target dictionary, and tries to create a new Target in your app. It then handles the various icons/info_plist additions specifically for this target. If your target already exists, it will just update the icon images and plist settings.
 
-If you leave off the `-n` option, it will run for all targets in the `.longbow.json` file.
+If you leave off the `-n` option, it will run for all targets in the `longbow.json` file.
 
 **Other Options**
 
@@ -112,6 +107,11 @@ If you leave off the `-n` option, it will run for all targets in the `.longbow.j
 `--dontlog` will not log the status/operations to the console.
 
 `--help` will fill you in on what you need to do for an action.
+
+## The Future
+
+* Unit Tests
+* App Store deployment of Targets
 
 ## Contributing
 

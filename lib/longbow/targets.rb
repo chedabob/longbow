@@ -25,7 +25,8 @@ module Longbow
     proj.targets.each do |t|
       if t.to_s == target
         @target = t
-        Longbow::green '  ' + target + ' found.' unless $nolog
+        Longbow::blue '  ' + target + ' found.' unless $nolog
+        break
       end
     end
 
@@ -97,7 +98,7 @@ module Longbow
         end
       end
 
-      Longbow::green '  ' + target + ' created.' unless $nolog
+      Longbow::blue '  ' + target + ' created.' unless $nolog
     else
       puts
       Longbow::red '  Target Creation failed for target named: ' + target

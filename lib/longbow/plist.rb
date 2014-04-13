@@ -1,23 +1,17 @@
-$:.push File.expand_path('../', __FILE__)
-require 'mini_magick'
-require 'colors'
-require 'xcodeproj'
-require 'open-uri'
-
 module Longbow
 
   # Create Plist from Original Plist Content
   def self.create_plist_from_old_plist old_plist, info_hash, global_hash
     return '' unless old_plist && info_hash && global_hash
     plist_text = old_plist
-    [info_hash,global_hash].each do |hash|
+    [global_hash,info_hash].each do |hash|
       hash.each_key do |k|
         value = hash[k]
         matches = plist_text.match /<key>#{k}<\/key>\s*<(.*?)>.*<\/(.*?)>/
         if matches
-          plist_text = plist_text.sub(matches[0], "<key>" + k + "</key>\n" + recursive_plist_value_for_value(value))
+          plist_text = plist_text.sub(matches[0], "<key>" + k + "</key>\n" + recursive_plist_value_for_value(value) + "\n")
         else
-          plist_text = plist_text.sub(/<\/dict>\s*<\/plist>/, "<key>" + k + "</key>\n" + recursive_plist_value_for_value(value) + "</dict></plist>")
+          plist_text = plist_text.sub(/<\/dict>\s*<\/plist>/, "<key>" + k + "</key>\n" + recursive_plist_value_for_value(value) + "\n</dict></plist>")
         end
       end
     end

@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Longbow::VERSION
   spec.authors       = ["Intermark Interactive"]
   spec.email         = ["interactive@intermarkgroup.com"]
-  spec.description   = "Duplicates the main target of an xcodeproj/xcworkspace and renames it, its info.plist, and its image.xcassets as well. It then optionally reads from a .longbow.json file in your project directory that adds info.plist keys, urls to a 1024x1024 icon that it resizes to fit device type. It also handles "
+  spec.description   = "One codebase. Multiple App Store submission targets with different icons, info.plist keys, etc."
   spec.summary       = "Better target creation for one iOS codebase."
   spec.homepage      = "https://github.com/intermark/longbow"
   spec.license       = "MIT"
@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "rake"
 
-  spec.files         = Dir["./**/*"].reject { |file| file =~ /\.\/(bin|log|pkg|script|spec|test|vendor)/ }
+  spec.files         = Dir["./**/*"].reject { |file| file =~ /\.\/(bin|log|pkg|script|spec|test|vendor|(.*?)\.gem)/ }
   spec.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   spec.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   spec.require_paths = ["lib"]

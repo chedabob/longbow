@@ -9,7 +9,6 @@ command :shoot do |c|
   c.syntax = 'longbow shoot [options]'
   c.summary = 'Creates/updates a target or all targets in your workspace or project.'
   c.description = ''
-
   c.option '-n', '--name NAME', 'Target name from the corresponding longbow.json file.'
   c.option '-d', '--directory DIRECTORY', 'Path where the .xcodeproj or .xcworkspace file && the longbow.json file live.'
 
@@ -60,8 +59,7 @@ command :shoot do |c|
     # Begin
     @targets.each do |t|
       Longbow::update_target @directory, t['name'], obj['global_info_keys'], t['info_plist']
-      Longbow::resize_icons @directory, t, obj
-      Longbow::write_json_for_icons @directory, t, obj
+      Longbow::create_images @directory, t, obj
       Longbow::green '  Finished: ' + t['name'] unless $nolog
       puts unless $nolog
     end
