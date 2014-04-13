@@ -33,6 +33,7 @@ module Longbow
     write_json_for_icons directory, t, iPhone, iPad
 
     # Write JSON for Launch Assets
+    write_json_for_launch_images directory, t
 
   end
 
@@ -107,9 +108,9 @@ module Longbow
       end
 
       # Resize Images
-      image = MiniMagick::Image.open(img_path)
-      return false unless image
       sizes.each do |size|
+        image = MiniMagick::Image.open(img_path)
+        return false unless image
         resize_image_to_directory img_dir, image, size, key + '_'
       end
     end
@@ -166,6 +167,107 @@ module Longbow
     # Return true
     Longbow::green ('  - Created Images.xcassets icon set for ' + target) unless $nolog
     return true
+  end
+
+
+  # JSON for Launch Images
+  def self.write_json_for_launch_images directory, t
+    # Set Up
+    target = t['name']
+    phone_portrait = t['launch_phone_p_url'] || t['launch_phone_p_path']
+    phone_landscape = t['launch_phone_l_url'] || t['launch_phone_l_path']
+    tablet_portrait = t['launch_tablet_p_url'] || t['launch_tablet_p_path']
+    tablet_landscape = t['launch_tablet_l_url'] || t['launch_tablet_l_path']
+
+    # Make Directory
+    img_dir = make_asset_directory directory, target, '.launchimage/'
+
+    File.open(img_dir + '/Contents.json', 'w') do |f|
+      f.write('{"images" : [')
+
+      if phone_portrait
+        f.write('{
+      "orientation" : "portrait",
+      "idiom" : "iphone",
+      "extent" : "full-screen",
+      "minimum-system-version" : "7.0",
+      "filename" : "launch_phone_p_640x960.png",
+      "scale" : "2x"
+    },
+    {
+      "extent" : "full-screen",
+      "idiom" : "iphone",
+      "subtype" : "retina4",
+      "filename" : "launch_phone_p_640x1136.png",
+      "minimum-system-version" : "7.0",
+      "orientation" : "portrait",
+      "scale" : "2x"
+    }')
+        f.write ',' if phone_landscape || tablet_portrait || tablet_landscape
+      end
+
+      if phone_landscape
+        f.write('{
+      "orientation" : "landscape",
+      "idiom" : "iphone",
+      "extent" : "full-screen",
+      "minimum-system-version" : "7.0",
+      "filename" : "launch_phone_l_960x640.png",
+      "scale" : "2x"
+    },
+    {
+      "extent" : "full-screen",
+      "idiom" : "iphone",
+      "subtype" : "retina4",
+      "filename" : "launch_phone_l_1136x640.png",
+      "minimum-system-version" : "7.0",
+      "orientation" : "landscape",
+      "scale" : "2x"
+    }')
+        f.write ',' if tablet_portrait || tablet_landscape
+      end
+
+      if tablet_portrait
+        f.write('{
+      "orientation" : "portrait",
+      "idiom" : "ipad",
+      "extent" : "full-screen",
+      "filename" : "launch_tablet_p_768x1024.png",
+      "minimum-system-version" : "7.0",
+      "scale" : "1x"
+    },
+    {
+      "orientation" : "portrait",
+      "idiom" : "ipad",
+      "extent" : "full-screen",
+      "filename" : "launch_tablet_p_1536x2048.png",
+      "minimum-system-version" : "7.0",
+      "scale" : "2x"
+    }')
+        f.write ',' if tablet_landscape
+      end
+
+      if tablet_landscape
+        f.write('{
+      "orientation" : "landscape",
+      "idiom" : "ipad",
+      "extent" : "full-screen",
+      "filename" : "launch_tablet_l_1024x768.png",
+      "minimum-system-version" : "7.0",
+      "scale" : "1x"
+    },
+    {
+      "orientation" : "landscape",
+      "idiom" : "ipad",
+      "extent" : "full-screen",
+      "filename" : "launch_tablet_l_2048x1536.png",
+      "minimum-system-version" : "7.0",
+      "scale" : "2x"
+    }')
+      end
+
+      f.write('],"info" : {"version" : 1,"author" : "xcode"}}')
+    end
   end
 
 

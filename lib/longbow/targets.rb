@@ -4,7 +4,7 @@ require 'plist'
 
 module Longbow
 
-  def self.update_target directory, target, global_keys, info_keys
+  def self.update_target directory, target, global_keys, info_keys, icon, launch
     unless directory && target
       Longbow::red '  Invalid parameters. Could not create/update target named: ' + target
       return false
@@ -59,7 +59,8 @@ module Longbow
 
       # Plist & Icons
       settings['INFOPLIST_FILE'] = main_plist.split('/')[0] + '/' + target + '-info.plist'
-      settings['ASSETCATALOG_COMPILER_APPICON_NAME'] = target
+      settings['ASSETCATALOG_COMPILER_APPICON_NAME'] = target if icon
+      settings['ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME'] = target if launch
 
       if File.exists? directory + '/Pods'
         settings['PODS_ROOT'] = '${SRCROOT}/Pods'
