@@ -98,13 +98,13 @@ module Longbow
       # Make resize sizes
       sizes = []
       if key == 'launch_phone_p'
-        sizes = ['640x1136','640x960']
+        sizes = ['640x1136','640x960','320x480']
       elsif key == 'launch_phone_l'
-        sizes = ['1136x640','960x640']
+        sizes = ['1136x640','960x640','480x320']
       elsif key == 'launch_tablet_p'
-        sizes = ['1536x2048','768x1024']
+        sizes = ['1536x2048','768x1024','1536x2008','768x1004']
       elsif key == 'launch_tablet_l'
-        sizes = ['2048x1536','1024x768']
+        sizes = ['2048x1536','1024x768','2048x1496','1024x748']
       end
 
       # Resize Images
@@ -203,6 +203,28 @@ module Longbow
       "minimum-system-version" : "7.0",
       "orientation" : "portrait",
       "scale" : "2x"
+    },
+    {
+      "orientation" : "portrait",
+      "idiom" : "iphone",
+      "extent" : "full-screen",
+      "filename" : "launch_phone_p_320x480.png",
+      "scale" : "1x"
+    },
+    {
+      "orientation" : "portrait",
+      "idiom" : "iphone",
+      "extent" : "full-screen",
+      "filename" : "launch_phone_p_640x960.png",
+      "scale" : "2x"
+    },
+    {
+      "orientation" : "portrait",
+      "idiom" : "iphone",
+      "extent" : "full-screen",
+      "subtype" : "retina4",
+      "filename" : "launch_phone_p_640x1136.png",
+      "scale" : "2x"
     }')
         f.write ',' if phone_landscape || tablet_portrait || tablet_landscape
       end
@@ -224,6 +246,28 @@ module Longbow
       "minimum-system-version" : "7.0",
       "orientation" : "landscape",
       "scale" : "2x"
+    },
+    {
+      "orientation" : "landscape",
+      "idiom" : "iphone",
+      "extent" : "full-screen",
+      "filename" : "launch_phone_l_480x320.png",
+      "scale" : "1x"
+    },
+    {
+      "orientation" : "landscape",
+      "idiom" : "iphone",
+      "extent" : "full-screen",
+      "filename" : "launch_phone_l_960x640.png",
+      "scale" : "2x"
+    },
+    {
+      "orientation" : "landscape",
+      "idiom" : "iphone",
+      "extent" : "full-screen",
+      "subtype" : "retina4",
+      "filename" : "launch_phone_l_1136x640.png",
+      "scale" : "2x"
     }')
         f.write ',' if tablet_portrait || tablet_landscape
       end
@@ -244,6 +288,34 @@ module Longbow
       "filename" : "launch_tablet_p_1536x2048.png",
       "minimum-system-version" : "7.0",
       "scale" : "2x"
+    },
+    {
+      "orientation" : "portrait",
+      "idiom" : "ipad",
+      "extent" : "to-status-bar",
+      "scale" : "1x",
+      "filename" : "launch_tablet_p_768x1004.png"
+    },
+    {
+      "orientation" : "portrait",
+      "idiom" : "ipad",
+      "extent" : "full-screen",
+      "scale" : "1x",
+      "filename" : "launch_tablet_p_768x1024.png"
+    },
+    {
+      "orientation" : "portrait",
+      "idiom" : "ipad",
+      "extent" : "to-status-bar",
+      "scale" : "2x",
+      "filename" : "launch_tablet_p_1536x2008.png"
+    },
+    {
+      "orientation" : "portrait",
+      "idiom" : "ipad",
+      "extent" : "full-screen",
+      "scale" : "2x",
+      "filename" : "launch_tablet_p_1536x2048.png"
     }')
         f.write ',' if tablet_landscape
       end
@@ -264,6 +336,34 @@ module Longbow
       "filename" : "launch_tablet_l_2048x1536.png",
       "minimum-system-version" : "7.0",
       "scale" : "2x"
+    },
+    {
+      "orientation" : "landscape",
+      "idiom" : "ipad",
+      "extent" : "to-status-bar",
+      "scale" : "1x",
+      "filename" : "launch_tablet_l_1024x748.png"
+    },
+    {
+      "orientation" : "landscape",
+      "idiom" : "ipad",
+      "extent" : "full-screen",
+      "scale" : "1x",
+      "filename" : "launch_tablet_l_1024x768.png"
+    },
+    {
+      "orientation" : "landscape",
+      "idiom" : "ipad",
+      "extent" : "to-status-bar",
+      "scale" : "2x",
+      "filename" : "launch_tablet_l_2048x1496.png"
+    },
+    {
+      "orientation" : "landscape",
+      "idiom" : "ipad",
+      "extent" : "full-screen",
+      "scale" : "2x",
+      "filename" : "launch_tablet_l_2048x1536.png"
     }')
       end
 
