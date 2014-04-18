@@ -13,6 +13,9 @@ command :shoot do |c|
   c.option '-d', '--directory DIRECTORY', 'Path where the .xcodeproj or .xcworkspace file && the longbow.json file live.'
 
   c.action do |args, options|
+    # Check for newer version
+    Longbow::check_for_newer_version unless $nolog
+
     # Set Up
     @target_name = options.name ? options.name : nil
     @directory = options.directory ? options.directory : Dir.pwd

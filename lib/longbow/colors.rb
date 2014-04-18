@@ -16,4 +16,8 @@ module Longbow
   def self.blue(text)
     colorize(text, 36)
   end
+
+  def self.purple(text)
+    colorize(text, 35)
+  end
 end

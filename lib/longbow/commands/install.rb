@@ -9,9 +9,14 @@ command :install do |c|
   c.option '-d', '--directory DIRECTORY', 'Path where the .xcproj or .xcworkspace file && the longbow.json file live.'
 
   c.action do |args, options|
+    # Check for newer version
+    Longbow::check_for_newer_version unless $nolog
+
+    # Set Up
     @directory = options.directory ? options.directory : Dir.pwd
     @json_path = @directory + '/longbow.json'
 
+    # Install
     if File.exist?(@json_path)
       Longbow::red '  longbow.json already exists at ' + @json_path
     else
