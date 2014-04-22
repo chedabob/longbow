@@ -54,7 +54,7 @@ module Longbow
     image_sizes = []
     image_sizes += ['120x120', '114x114', '80x80', '58x58', '57x57', '29x29'] if iPhone
     image_sizes += ['152x152', '144x144', '100x100', '80x80', '76x76', '72x72', '58x58', '50x50', '40x40', '29x29'] if iPad
-    image_sizes.uniq.each { |size| resize_image_to_director img_dir, image, size, 'icon' }
+    image_sizes.uniq.each { |size| resize_image_to_directory img_dir, image, size, 'icon' }
 
     Longbow::green ('  - Created Icon images for ' + target) unless $nolog
     return true
