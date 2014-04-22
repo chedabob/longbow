@@ -2,9 +2,11 @@ module Longbow
 
   # Create Plist from Original Plist Content
   def self.create_plist_from_old_plist old_plist, info_hash, global_hash
-    return '' unless old_plist && info_hash && global_hash
+    return '' unless old_plist
+    return old_plist unless (info_hash || global_hash)
     plist_text = old_plist
     [global_hash,info_hash].each do |hash|
+      next unless hash
       hash.each_key do |k|
         value = hash[k]
         matches = plist_text.match /<key>#{k}<\/key>\s*<(.*?)>.*<\/(.*?)>/
