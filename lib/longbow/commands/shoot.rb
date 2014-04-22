@@ -24,12 +24,8 @@ command :shoot do |c|
     # Check for .longbow.json
     @json_path = @directory + '/longbow.json'
     if !File.exists?(@json_path)
-      puts
-      Longbow::red "  Couldn't find longbow.json at " + @json_path
-      puts
-      puts "  Run this command to install the correct files:"
-      puts "  longbow install"
-      puts
+      Longbow::red "\n  Couldn't find longbow.json at #{@json_path}\n"
+      puts "  Run this command to install the correct files:\n  longbow install\n"
       next
     end
 
@@ -48,9 +44,7 @@ command :shoot do |c|
       end
 
       if @targets.length == 0
-        puts
-        Longbow::red "  Couldn't find a target named " + @target_name + " in the .longbow.json file."
-        puts
+        Longbow::red "\n  Couldn't find a target named #{@target_name} in the .longbow.json file.\n"
         next
       end
     else
@@ -65,8 +59,7 @@ command :shoot do |c|
       launch = t['launch_phone_p_url'] || t['launch_phone_p_path'] || t['launch_phone_l_url'] || t['launch_phone_l_path'] || t['launch_tablet_p_url'] || t['launch_tablet_p_path'] || t['launch_tablet_l_url'] || t['launch_tablet_l_path']
       Longbow::update_target @directory, t['name'], obj['global_info_keys'], t['info_plist'], icon, launch
       Longbow::create_images @directory, t, obj
-      Longbow::green '  Finished: ' + t['name'] unless $nolog
-      puts unless $nolog
+      Longbox::green "  Finished: #{t[name]}\n" unless $nolog
     end
   end
 end
