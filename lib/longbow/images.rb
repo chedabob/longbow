@@ -48,23 +48,13 @@ module Longbow
     # Make directory
     img_dir = make_asset_directory directory, target, '.appiconset/'
 
-    # Size for iPhone
-    if iPhone
-      image = MiniMagick::Image.open(img_path)
-      return false unless image
-      ['120x120', '114x114', '80x80', '58x58', '57x57', '29x29'].each do |size|
-        resize_image_to_directory img_dir, image, size, 'icon'
-      end
-    end
+    image = MiniMagick::Image.open(img_path)
+    return false unless image
 
-    # iPad
-    if iPad
-      image = MiniMagick::Image.open(img_path)
-      return false unless image
-      ['152x152', '144x144', '100x100', '80x80', '76x76', '72x72', '58x58', '50x50', '40x40', '29x29'].each do |size|
-        resize_image_to_directory img_dir, image, size, 'icon'
-      end
-    end
+    image_sizes = []
+    image_sizes += ['120x120', '114x114', '80x80', '58x58', '57x57', '29x29'] if iPhone
+    image_sizes += ['152x152', '144x144', '100x100', '80x80', '76x76', '72x72', '58x58', '50x50', '40x40', '29x29'] if iPad
+    image_sizes.uniq.each { |size| resize_image_to_director img_dir, image, size, 'icon' }
 
     Longbow::green ('  - Created Icon images for ' + target) unless $nolog
     return true
