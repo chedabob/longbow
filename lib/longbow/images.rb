@@ -14,14 +14,8 @@ module Longbow
     end
 
     # Get Device Information
-    iPhone = false
-    iPad = false
-    if obj['devices']
-      obj['devices'].each do |d|
-        iPhone = true if d == 'iPhone'
-        iPad = true if d == 'iPad'
-      end
-    end
+    iPhone = obj['devices'].include? 'iPhone'
+    iPad = obj['devices'].include? 'iPad'
 
     # Resize Icons
     resize_icons directory, t, iPhone, iPad
