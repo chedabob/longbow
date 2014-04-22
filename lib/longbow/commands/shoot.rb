@@ -59,7 +59,7 @@ command :shoot do |c|
       launch = t['launch_phone_p_url'] || t['launch_phone_p_path'] || t['launch_phone_l_url'] || t['launch_phone_l_path'] || t['launch_tablet_p_url'] || t['launch_tablet_p_path'] || t['launch_tablet_l_url'] || t['launch_tablet_l_path']
       Longbow::update_target @directory, t['name'], obj['global_info_keys'], t['info_plist'], icon, launch
       Longbow::create_images @directory, t, obj
-      Longbox::green "  Finished: #{t[name]}\n" unless $nolog
+      Longbow::green "  Finished: #{t['name']}\n" unless $nolog
     end
   end
 end
