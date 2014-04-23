@@ -105,8 +105,9 @@ If you leave off the `-n` option, it will run for all targets in the `longbow.js
 **Other Options**
 
 * `-d, --directory` - if not in the current directory, specify a new path
+* `-u, --url` - the url of a longbow formatted JSON file
 
-`longbow shoot -n NameOfTarget -d ~/Path/To/App`
+`longbow shoot -n NameOfTarget -d ~/Path/To/App -u http://someurl.com/longbow.json`
 
 ## Global Options
 
