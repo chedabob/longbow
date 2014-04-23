@@ -54,7 +54,7 @@ command :shoot do |c|
 
     # Begin
     @targets.each do |t|
-      icon = t['icon_url'] | t['icon_path']
+      icon = t['icon_url'] || t['icon_path']
       launch = t['launch_phone_p_url'] || t['launch_phone_p_path'] || t['launch_phone_l_url'] || t['launch_phone_l_path'] || t['launch_tablet_p_url'] || t['launch_tablet_p_path'] || t['launch_tablet_l_url'] || t['launch_tablet_l_path']
       Longbow::update_target @directory, t['name'], obj['global_info_keys'], t['info_plist'], icon, launch
       Longbow::create_images @directory, t, obj
