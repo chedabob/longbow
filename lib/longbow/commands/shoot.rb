@@ -3,6 +3,7 @@ require 'fileutils'
 require 'longbow/colors'
 require 'longbow/targets'
 require 'longbow/images'
+require 'longbow/json'
 require 'json'
 
 command :shoot do |c|
@@ -11,6 +12,7 @@ command :shoot do |c|
   c.description = ''
   c.option '-n', '--name NAME', 'Target name from the corresponding longbow.json file.'
   c.option '-d', '--directory DIRECTORY', 'Path where the .xcodeproj or .xcworkspace file && the longbow.json file live.'
+  c.option '-u', '--url URL', 'URL of a longbow formatted JSON file.'
 
   c.action do |args, options|
     # Check for newer version
@@ -19,23 +21,21 @@ command :shoot do |c|
     # Set Up
     @target_name = options.name ? options.name : nil
     @directory = options.directory ? options.directory : Dir.pwd
+    @url = options.url ? options.url : nil
     @targets = []
 
-    # Check for .longbow.json
-    @json_path = @directory + '/longbow.json'
-    if !File.exists?(@json_path)
-      Longbow::red "\n  Couldn't find longbow.json at #{@json_path}\n"
-      puts "  Run this command to install the correct files:\n  longbow install\n"
-      next
+    # Create JSON object
+    if @url
+      obj = Longbow::json_object_from_url @url
+    else
+      obj = Longbow::json_object_from_directory @directory
     end
 
-    # Create an Object from JSON
-    json_contents = File.open(@json_path).read
-    unless !!JSON.parse(json_contents)
-      Longbow::red '  Invalid JSON - lint it, and try again.'
+    # Break if Bad
+    unless obj
+      Longbow::red "\n Invalid JSON. Please lint the file, and try again.\n"
       next
     end
-    obj = JSON.parse(json_contents)
 
     # Check for Target Name
     if @target_name
@@ -48,9 +48,7 @@ command :shoot do |c|
         next
       end
     else
-      obj['targets'].each do |t|
-        @targets << t
-      end
+      @targets = obj['targets']
     end
 
     # Begin

@@ -69,7 +69,6 @@ module Longbow
     target = t['name']
 
     ['launch_phone_p', 'launch_phone_l', 'launch_tablet_p', 'launch_tablet_l'].each do |key|
-      img_path = ''
       if t[key + '_url']
         img_path = self.path_for_downloaded_image_from_url directory, key + '_' + target, t[key + '_url'], 'launch'
       elsif t[key + '_path']
