@@ -29,7 +29,7 @@ module Longbow
     return json_object_from_string contents
   end
 
-  
+
   def self.json_object_from_string contents
     begin
       !!JSON.parse(contents)
@@ -38,6 +38,13 @@ module Longbow
     end
 
     return JSON.parse(contents)
+  end
+
+
+  def self.lint_json_object obj
+    return false unless obj
+    return false unless obj['targets']
+    return true
   end
 
 end

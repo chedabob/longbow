@@ -32,10 +32,11 @@ command :shoot do |c|
     end
 
     # Break if Bad
-    unless obj
-      Longbow::red "\n Invalid JSON. Please lint the file, and try again.\n"
+    unless obj || Longbow::lint_json_object(obj)
+      Longbow::red "\n  Invalid JSON. Please lint the file, and try again.\n"
       next
     end
+
 
     # Check for Target Name
     if @target_name
