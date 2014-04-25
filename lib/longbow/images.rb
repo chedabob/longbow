@@ -1,5 +1,7 @@
 $:.push File.expand_path('../', __FILE__)
-require 'mini_magick'
+# require 'mini_magick'
+require 'RMagick'
+include Magick
 require 'colors'
 require 'xcodeproj'
 require 'open-uri'
@@ -53,7 +55,7 @@ module Longbow
     image_sizes += ['120x120', '114x114', '80x80', '58x58', '57x57', '29x29'] if iPhone
     image_sizes += ['152x152', '144x144', '100x100', '80x80', '76x76', '72x72', '58x58', '50x50', '40x40', '29x29'] if iPad
     image_sizes.uniq.each do |size|
-      image = MiniMagick::Image.open(img_path)
+      image = Image.read(img_path).first
       next unless image
       resize_image_to_directory img_dir, image, size, 'icon'
     end
@@ -94,7 +96,7 @@ module Longbow
 
       # Resize Images
       sizes.each do |size|
-        image = MiniMagick::Image.open(img_path)
+        image = Image.read(img_path).first
         return false unless image
         resize_image_to_directory img_dir, image, size, key + '_'
       end
@@ -110,18 +112,7 @@ module Longbow
     sizes = size.split('x')
     new_w = Integer(sizes[0])
     new_h = Integer(sizes[1])
-    w = image[:width]
-    h = image[:height]
-    if w < h
-      m = new_w.to_f/w
-      new_size = new_w.to_s + 'x' + (h*m).to_i.to_s
-    else
-      m = new_h.to_f/h
-      new_size = (w*m).to_i.to_s + 'x' + new_h.to_s
-    end
-
-    image.resize new_size
-    image.crop size + '+0+0' unless new_size == size
+    image.resize_to_fill! new_w, new_h
     image.write  directory + '/' + tag + size + '.png'
   end
 

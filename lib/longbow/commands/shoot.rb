@@ -45,7 +45,7 @@ command :shoot do |c|
       end
 
       if @targets.length == 0
-        Longbow::red "\n  Couldn't find a target named #{@target_name} in the .longbow.json file.\n"
+        Longbow::red "\n  Couldn't find a target named #{@target_name} in the longbow.json file.\n"
         next
       end
     else
