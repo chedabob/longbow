@@ -23,7 +23,7 @@ module Longbow
 
   # Recursively create Plist Values for a given object
   def self.recursive_plist_value_for_value value
-    return '' unless value
+    return '' unless value != nil
 
     # Check Number
     if value.kind_of?(Numeric)
