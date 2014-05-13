@@ -5,6 +5,7 @@ include Magick
 require 'colors'
 require 'xcodeproj'
 require 'open-uri'
+require 'utilities'
 
 module Longbow
 
@@ -355,7 +356,7 @@ module Longbow
   # Asset Directory Methods
   def self.make_asset_directory directory, target, path_extension
     asset_path = assets_file_path directory
-    full_path = asset_path + '/' + target + path_extension
+    full_path = asset_path + '/' + Longbow::stripped_text(target) + path_extension
     FileUtils::mkdir_p full_path
     return full_path
   end
@@ -383,6 +384,5 @@ module Longbow
 
     return img_path + img_file_name
   end
-
 
 end

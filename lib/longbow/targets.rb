@@ -1,6 +1,7 @@
 require 'xcodeproj'
 require 'colors'
 require 'plist'
+require 'utilities'
 
 module Longbow
 
@@ -59,8 +60,8 @@ module Longbow
 
       # Plist & Icons
       settings['INFOPLIST_FILE'] = main_plist.split('/')[0] + '/' + target + '-info.plist'
-      settings['ASSETCATALOG_COMPILER_APPICON_NAME'] = target if icon
-      settings['ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME'] = target if launch
+      settings['ASSETCATALOG_COMPILER_APPICON_NAME'] = Longbow::stripped_text(target) if icon
+      settings['ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME'] = Longbow::stripped_text(target) if launch
       settings['SKIP_INSTALL'] = 'NO'
 
       if File.exists? directory + '/Pods'
