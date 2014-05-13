@@ -61,6 +61,7 @@ module Longbow
       settings['INFOPLIST_FILE'] = main_plist.split('/')[0] + '/' + target + '-info.plist'
       settings['ASSETCATALOG_COMPILER_APPICON_NAME'] = target if icon
       settings['ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME'] = target if launch
+      settings['SKIP_INSTALL'] = 'NO'
 
       if File.exists? directory + '/Pods'
         settings['PODS_ROOT'] = '${SRCROOT}/Pods'
