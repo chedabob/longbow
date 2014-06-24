@@ -43,7 +43,7 @@ Run `longbow install` in the directory where your `.xcworkspace` or `.xcodeproj`
 
 Here's a basic gist of how to format your `longbow.json` file:
 
-```
+```json
 {
 	"targets":[
 		{
