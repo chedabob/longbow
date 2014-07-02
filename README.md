@@ -2,18 +2,21 @@
 
 **Problem**
 
-One codebase. Multiple App Store submission targets with different icons, launch images, info.plist keys, etc.
+One codebase. Multiple App Store submission targets with different icons, launch images, info.plist keys, screenshots, etc.
 
 **Solution**
 
 ```
 $ longbow install
 $ longbow shoot
+$ longbow aim
 ```
 
 **About**
 
 Longbow is a command-line run ruby gem that duplicates the main target in your `.xcworkspace` or `.xcodeproj` file, then reads from a JSON file to fill out the rest of your new target. It looks for certain keys and does things like taking an icon image and resizing it for the various icons you'll need, and adding keys to the info.plist file for that target. The goal was to be practically autonomous in creating new targets and apps.
+
+Additionally, it can create screenshots for each target app store submission. You write a simple UIAutomation script (it's just JavaScript) and Longbow takes care of taking the screenshots for each combination of target, device, and language.
 
 **Requirements**
 
@@ -115,10 +118,22 @@ If you leave off the `-n` option, it will run for all targets in the `longbow.js
 
 `--help` will fill you in on what you need to do for an action.
 
+## Taking Screenshots
+
+So you've created all your targets and finished the first version of the app - now you need the screen shots to submit it to the App Store.
+
+First you'll need to write a single UIAutomation script to take the screenshots. You can see [Apple's Documentation](https://developer.apple.com/library/ios/documentation/DeveloperTools/Reference/UIAutomationRef/_index.html) for more information on writing the script. The part we're primarily concerned with is the captureLocalizedScreenshot() method provided by Longbow. This method will take the screenshot with a consistent naming scheme and place it in a folder for each target.
+
+`captureLocalizedScreenshot("homeScreen");` will create ~/Desktop/screenshots/TargetName/en-US/iOS-4-in\_\_\_portrait\_\_\_homeScreen.png
+
+Once you've created your automation script, you can run it by calling `longbow aim`. This command will generate a variation of your UIAutomation script for each target, then handle running it for each target. Grab a drink, depending on your script and your number of targets, this may take a while.
+
+
 ## The Future
 
 * Unit Tests
 * App Store deployment of Targets
+* `sight-in` method for testing/validating a UIAutomation script
 
 ## Contributing
 
