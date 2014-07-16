@@ -133,7 +133,6 @@ Once you've created your automation script, you can run it by calling `longbow a
 
 * Unit Tests
 * App Store deployment of Targets
-* `sight-in` method for testing/validating a UIAutomation script
 
 ## Contributing
 
