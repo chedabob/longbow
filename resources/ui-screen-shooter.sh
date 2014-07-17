@@ -43,6 +43,7 @@ languages="en-US"
 #"iPad Retina - Simulator - iOS 7.1"
 #)
 declare -a simulators=(
+"iPhone Retina (3.5-inch) - Simulator - iOS 7.1"
 "iPhone Retina (4-inch) - Simulator - iOS 7.1"
 )
 
