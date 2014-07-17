@@ -194,7 +194,10 @@ function _copy_screenshots {
 function _close_sim {
   # I know, I know. It says "iPhone Simulator". For some reason,
   # that's the only way Applescript can identify it.
+  DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+  osascript "$DIR"/reset.scpt
   osascript -e "tell application \"iPhone Simulator\" to quit"
+  kill -9 $(ps -ef | grep launchd_sim | grep Simulator | awk {'print $2'})
 }
 
 main
