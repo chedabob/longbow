@@ -45,7 +45,7 @@ command :aim do |c|
     @targets.each do |t|
       puts "Running screenshooter for #{t['name']}"
       begin
-        `#{resources_path}/ui-screen-shooter.sh ~/Desktop/screenshots/#{t['name']} #{t['name']}`
+        `#{resources_path}/ui-screen-shooter.sh ~/Desktop/screenshots/#{t['name']} #{t['name']} #{@script}`
       rescue
         puts "Failed while running screenshooter for #{t['name']}"
       end
