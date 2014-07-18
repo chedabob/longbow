@@ -52,6 +52,7 @@ function main {
   _check_ui_script
   _check_scheme_name
   _xcode clean build
+  _reset_sim
 
   for simulator in "${simulators[@]}"; do
     for language in $languages; do
@@ -192,13 +193,18 @@ function _copy_screenshots {
   cp $trace_results_dir/Run\ 1/*.png "$destination/$language"
 }
 
+function _reset_sim {
+  count=`ps aux | grep [l]aunchd_sim | wc -l`
+  if [ $count -ne 0 ]
+  then
+    kill -9 $(ps -ef | grep [l]aunchd_sim | awk {'print $2'})
+  fi
+}
+
 function _close_sim {
   # I know, I know. It says "iPhone Simulator". For some reason,
   # that's the only way Applescript can identify it.
-  DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-  osascript "$DIR"/reset.scpt
   osascript -e "tell application \"iPhone Simulator\" to quit"
-  kill -9 $(ps -ef | grep launchd_sim | grep Simulator | awk {'print $2'})
 }
 
 main
