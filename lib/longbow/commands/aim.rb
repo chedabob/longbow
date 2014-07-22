@@ -12,6 +12,7 @@ command :aim do |c|
   c.option '-s', '--script SCRIPT', 'Script used to get the app into the proper state for each screenshot'
   c.option '-d', '--directory DIRECTORY', 'Path where the .xcodeproj or .xcworkspace file && the longbow.json file live.'
   c.option '-u', '--url URL', 'URL of a longbow formatted JSON file.'
+  c.option '-n', '--name NAME', 'Name of the target to get a screenshot for.'
 
   c.action do |args, options|
     # Check for newer version
@@ -21,6 +22,7 @@ command :aim do |c|
     @script = options.script ? options.script : nil
     @directory = options.directory ? options.directory : Dir.pwd
     @url = options.url ? options.url : nil
+    @target_name = options.name
     @targets = []
 
     # Create JSON object
@@ -36,18 +38,30 @@ command :aim do |c|
       next
     end
 
-    @targets = obj['targets']
+    # Check for Target Name
+    if @target_name
+      obj['targets'].each do |t|
+        @targets << t if t['name'] == @target_name
+      end
+
+      if @targets.length == 0
+        Longbow::red "\n  Couldn't find a target named #{@target_name} in the longbow.json file.\n"
+        next
+      end
+    else
+      @targets = obj['targets']
+    end
 
     resources_path = File.dirname(__FILE__) + '/../../../resources'
 
     FileUtils.cp "#{resources_path}/capture.js", "capture.js"
 
     @targets.each do |t|
-      puts "Running screenshooter for #{t['name']}"
+      puts "  Running screenshooter for #{t['name']}"
       begin
         `#{resources_path}/ui-screen-shooter.sh ~/Desktop/screenshots/#{t['name']} #{t['name']} #{@script}`
       rescue
-        puts "Failed while running screenshooter for #{t['name']}"
+        Longbow::red "Failed while running screenshooter for #{t['name']}"
       end
     end
 
