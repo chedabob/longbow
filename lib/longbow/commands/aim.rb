@@ -57,7 +57,7 @@ command :aim do |c|
     FileUtils.cp "#{resources_path}/capture.js", "capture.js"
 
     @targets.each do |t|
-      puts "  Running screenshooter for #{t['name']}"
+      Longbow::blue "  Running screenshooter for #{t['name']}"
       begin
         `#{resources_path}/ui-screen-shooter.sh ~/Desktop/screenshots/#{t['name']} #{t['name']} #{@script}`
       rescue
