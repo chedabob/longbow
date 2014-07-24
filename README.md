@@ -128,6 +128,13 @@ First you'll need to write a single UIAutomation script to take the screenshots.
 
 Once you've created your automation script, you can run it by calling `longbow aim`. This command will generate a variation of your UIAutomation script for each target, then handle running it for each target. Grab a drink, depending on your script and your number of targets, this may take a while.
 
+**Options**
+
+Similar to the `shoot` command, there are flags you can use with this feature.
+
+* `-n` - name of the target to capture
+* `-d` - directory the project lives in
+* `-u` - url of the longbow.json file
 
 ## The Future
 
