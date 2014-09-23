@@ -13,7 +13,7 @@ command :shoot do |c|
   c.option '-n', '--name NAME', 'Target name from the corresponding longbow.json file.'
   c.option '-d', '--directory DIRECTORY', 'Path where the .xcodeproj or .xcworkspace file && the longbow.json file live.'
   c.option '-u', '--url URL', 'URL of a longbow formatted JSON file.'
-  c.option '-i', '--images IMAGES', 'Set this flag to not recreate images in the longbow file.'
+  c.option '-i', '--images', 'Set this flag to not recreate images in the longbow file.'
 
   c.action do |args, options|
     # Check for newer version

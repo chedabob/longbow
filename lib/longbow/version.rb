@@ -2,7 +2,7 @@ $:.push File.expand_path('../', __FILE__)
 require 'colors'
 
 module Longbow
-  VERSION = '0.6.0'
+  VERSION = '0.6.1'
 
   def self.check_for_newer_version
     unless Gem.latest_version_for('longbow').to_s == VERSION
