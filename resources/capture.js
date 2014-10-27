@@ -43,7 +43,7 @@ function captureLocalizedScreenshot(name) {
 
   if (model.match(/iPhone/)) {
     if ((orientation == "portrait" && rect.size.height > 480) || (orientation == "landscape" && rect.size.width > 480)) {
-      model = "iPhone-6";
+      model = "iOS-4-in";
     } else {
       model = "iOS-3.5-in";
     }

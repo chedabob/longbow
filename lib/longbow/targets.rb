@@ -31,6 +31,8 @@ module Longbow
       end
     end
 
+    #puts proj.pretty_print
+
     # Create Target if Necessary
     main_target = proj.targets.first
     @target = create_target(proj, target) unless @target
@@ -50,8 +52,10 @@ module Longbow
     @target.build_configurations.each do |b|
       # Main Settings
       main_settings = nil
+      base_config = nil
       main_target.build_configurations.each do |bc|
         main_settings = bc.build_settings if bc.to_s == b.to_s
+        base_config = bc.base_configuration_reference if bc.to_s == b.to_s
       end
       settings = b.build_settings
       main_settings.each_key do |key|
@@ -65,8 +69,8 @@ module Longbow
       settings['SKIP_INSTALL'] = 'NO'
 
       if File.exists? directory + '/Pods'
+        b.base_configuration_reference = base_config
         settings['PODS_ROOT'] = '${SRCROOT}/Pods'
-        settings['HEADER_SEARCH_PATHS'] = ['${PODS_ROOT}/Headers/**']
       end
     end
 

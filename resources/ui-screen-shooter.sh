@@ -25,25 +25,36 @@ set -e
 
 # We require a parameter for where to put the results and the test script
 destination="$1"
-ui_script="$2"
+scheme_name="$2"
+ui_script="$3"
 
 # The locale identifiers for the languages you want to shoot
 # Use the format like en-US zh-Hans for filenames compatible with iTunes
 # connect upload tool
 # FYI: get the locale names for you existing app with iTMSTransporter and: 
 # grep locale ~/Desktop/*.itmsp/metadata.xml  | grep name | sort -u
-languages="en-US fr ja"
+languages="en-US"
 
 # The simulators we want to run the script against, declared as a Bash array.
 # Run `instruments -w help` to get a list of all the possible string values.
+#declare -a simulators=(
+#"iPhone Retina (3.5-inch) - Simulator - iOS 7.1"
+#"iPhone Retina (4-inch) - Simulator - iOS 7.1"
+#"iPad Retina - Simulator - iOS 7.1"
+#)
 declare -a simulators=(
-"Resizable iPad"
+"iPhone 4s"
+"iPhone 5s"
+"iPhone 6"
+"iPhone 6 Plus"
 )
 
 function main {
   _check_destination
   _check_ui_script
+  _check_scheme_name
   _xcode clean build
+  _reset_sim
 
   for simulator in "${simulators[@]}"; do
     for language in $languages; do
@@ -72,8 +83,8 @@ function _check_destination {
     destination="$HOME/Desktop/screenshots"
   fi
   if [ -d "$destination" ]; then
-    echo "Destination directory \"$destination\" already exists! Aborting."
-    exit 1
+    echo "Destination directory \"$destination\" already exists! Moving Directory."
+    mv "$destination" "$HOME/Desktop/screenshots$(date +"%Y%m%d%H%M")"
   fi
 }
 
@@ -86,6 +97,13 @@ function _check_ui_script {
   if [ ! -f "$ui_script" ]; then
     echo "UI script \"$ui_script\" does not exist! Aborting."
     exit 1
+  fi
+}
+
+function _check_scheme_name {
+  if [ -z "$scheme_name" ]; then
+    scheme_name=$(basename *.xcworkspace .xcworkspace)
+    echo "No scheme name specified, using the default."
   fi
 }
 
@@ -103,7 +121,7 @@ function _xcode {
     # or how I became to know this fact
     xcodebuild -sdk "iphonesimulator$ios_version" \
       CONFIGURATION_BUILD_DIR="$build_dir/build" \
-      -workspace $base.xcworkspace -scheme $base -configuration AdHoc \
+      -workspace $base.xcworkspace -scheme $scheme_name -configuration AdHoc \
       DSTROOT=$build_dir \
       OBJROOT=$build_dir \
       SYMROOT=$build_dir \
@@ -112,7 +130,7 @@ function _xcode {
     xcodebuild -sdk "iphonesimulator$ios_version" \
       CONFIGURATION_BUILD_DIR="$build_dir/build" \
       PRODUCT_NAME=app \
-      -workspace $base.xcworkspace -scheme $base -configuration AdHoc \
+      -workspace $base.xcworkspace -scheme $scheme_name -configuration AdHoc \
       DSTROOT=$build_dir \
       OBJROOT=$build_dir \
       SYMROOT=$build_dir \
@@ -177,6 +195,14 @@ function _copy_screenshots {
   cp $trace_results_dir/Run\ 1/*.png "$destination/$language"
 }
 
+function _reset_sim {
+  count=`ps aux | grep [l]aunchd_sim | wc -l`
+  if [ $count -ne 0 ]
+  then
+    kill -9 $(ps -ef | grep [l]aunchd_sim | awk {'print $2'})
+  fi
+}
+
 function _close_sim {
   # I know, I know. It says "iPhone Simulator". For some reason,
   # that's the only way Applescript can identify it.
@@ -184,4 +210,3 @@ function _close_sim {
 }
 
 main
-
