@@ -13,10 +13,10 @@ function main {
 		_run_target $target;
 	done
 	# Remove files added by ruby script
-	rm capture.js
-	rm config-screenshots.sh
-	rm ui-screen-shooter.sh
-	rm unix_instruments.sh
+	rm "capture.js"
+	rm "config-screenshots.sh"
+	rm "ui-screen-shooter.sh"
+	rm "unix_instruments.sh"
 }
 
 function _run_target {
