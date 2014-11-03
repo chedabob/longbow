@@ -13,6 +13,7 @@ command :aim do |c|
   c.option '-d', '--directory DIRECTORY', 'Path where the .xcodeproj or .xcworkspace file && the longbow.json file live.'
   c.option '-u', '--url URL', 'URL of a longbow formatted JSON file.'
   c.option '-n', '--name NAME', 'Name of the target to get a screenshot for.'
+  c.option '-v', '--verbose', 'Output all logs from UIAutomation/xcodebuild'
 
   c.action do |args, options|
     # Check for newer version
@@ -55,16 +56,16 @@ command :aim do |c|
     resources_path = File.dirname(__FILE__) + '/../../../resources'
 
     FileUtils.cp "#{resources_path}/capture.js", "capture.js"
-
+    FileUtils.cp "#{resources_path}/config-screenshots.sh", "config-screenshots.sh"
+    FileUtils.cp "#{resources_path}/ui-screen-shooter.sh", "ui-screen-shooter.sh"
+    FileUtils.cp "#{resources_path}/unix_instruments.sh", "unix_instruments.sh"
+    @target_names = []
     @targets.each do |t|
-      Longbow::blue "  Running screenshooter for #{t['name']}"
-      begin
-        `#{resources_path}/ui-screen-shooter.sh ~/Desktop/screenshots/#{t['name']} #{t['name']} #{@script}`
-      rescue
-        Longbow::red "Failed while running screenshooter for #{t['name']}"
-      end
+      @target_names << t['name']
     end
-
-    FileUtils.rm "capture.js"
+    target_string = @target_names.join(',')
+    Longbow::blue "  Beginning screenshots..."
+    exec "#{resources_path}/aim.sh #{target_string} verbose" if options.verbose
+    exec "#{resources_path}/aim.sh #{target_string}" if !options.verbose
   end
 end

@@ -28,33 +28,28 @@ destination="$1"
 scheme_name="$2"
 ui_script="$3"
 
-# The locale identifiers for the languages you want to shoot
-# Use the format like en-US zh-Hans for filenames compatible with iTunes
-# connect upload tool
-# FYI: get the locale names for you existing app with iTMSTransporter and: 
-# grep locale ~/Desktop/*.itmsp/metadata.xml  | grep name | sort -u
-languages="en-US"
-
-# The simulators we want to run the script against, declared as a Bash array.
-# Run `instruments -w help` to get a list of all the possible string values.
-#declare -a simulators=(
-#"iPhone Retina (3.5-inch) - Simulator - iOS 7.1"
-#"iPhone Retina (4-inch) - Simulator - iOS 7.1"
-#"iPad Retina - Simulator - iOS 7.1"
-#)
-declare -a simulators=(
-"iPhone 4s"
-"iPhone 5s"
-"iPhone 6"
-"iPhone 6 Plus"
-)
-
 function main {
+  # Load configuration
+  # Not in a separate function because you can't exort arrays
+  # https://stackoverflow.com/questions/5564418/exporting-an-array-in-bash-script
+  # Will export languages and simulators bash variables
+  export UISS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+  if [ -f "$UISS_DIR"/config-screenshots.sh ]; then
+    source "$UISS_DIR"/config-screenshots.sh
+  else
+    if [ -f "$UISS_DIR"/config-screenshots.example.sh ]; then
+      source "$UISS_DIR"/config-screenshots.example.sh
+      echo "WARNING: Using example config-screenshots file, you should create your own"
+    else
+      echo "Configuration \"config-screenshots.sh\" does not exist! Aborting."
+      exit 1
+    fi
+  fi
+
   _check_destination
   _check_ui_script
   _check_scheme_name
   _xcode clean build
-  _reset_sim
 
   for simulator in "${simulators[@]}"; do
     for language in $languages; do
@@ -92,11 +87,16 @@ function _check_ui_script {
   # Abort if the UI script does not exist.
 
   if [ -z "$ui_script" ]; then
-    ui_script="./shoot_the_screens.js"
+    ui_script="./config-automation.js"
   fi
   if [ ! -f "$ui_script" ]; then
-    echo "UI script \"$ui_script\" does not exist! Aborting."
-    exit 1
+    if [ -f "./config-automation.example.js" ]; then
+      ui_script="./config-automation.js"
+      echo "WARNING: Using example config-automation, please create your own"
+    else
+      echo "Config-automation does not exist! Aborting."
+      exit 1
+    fi
   fi
 }
 
@@ -121,7 +121,8 @@ function _xcode {
     # or how I became to know this fact
     xcodebuild -sdk "iphonesimulator$ios_version" \
       CONFIGURATION_BUILD_DIR="$build_dir/build" \
-      -workspace $base.xcworkspace -scheme $scheme_name -configuration AdHoc \
+      -workspace "$base.xcworkspace" -scheme "$scheme_name" -configuration Debug \
+      PRODUCT_NAME="$scheme_name" \
       DSTROOT=$build_dir \
       OBJROOT=$build_dir \
       SYMROOT=$build_dir \
@@ -129,14 +130,15 @@ function _xcode {
     "$@"
     xcodebuild -sdk "iphonesimulator$ios_version" \
       CONFIGURATION_BUILD_DIR="$build_dir/build" \
-      PRODUCT_NAME=app \
-      -workspace $base.xcworkspace -scheme $scheme_name -configuration AdHoc \
+      -workspace "$base.xcworkspace" -scheme "$scheme_name" -configuration Debug \
+      PRODUCT_NAME="$scheme_name" \
       DSTROOT=$build_dir \
       OBJROOT=$build_dir \
       SYMROOT=$build_dir \
       ONLY_ACTIVE_ARCH=NO \
     "$@"
-    cp -r "$build_dir/build/app.app" "$build_dir"
+    cp -r "$build_dir/build/$scheme_name.app" "$build_dir"
+    bundle_dir="$build_dir/$scheme_name.app"
   else
     xcodebuild -sdk "iphonesimulator$ios_version" \
       CONFIGURATION_BUILD_DIR=$build_dir \
@@ -166,7 +168,7 @@ function _run_automation {
           in language \"${language}\"..."
 
   dev_tools_dir=`xcode-select -print-path`
-  tracetemplate="$dev_tools_dir/../Applications/Instruments.app/Contents/PlugIns/AutomationInstrument.xrplugin/Contents/Resources/Automation.tracetemplate"
+  tracetemplate="Automation"
 
   # Check out the `unix_instruments.sh` script to see why we need this wrapper.
   DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -174,12 +176,11 @@ function _run_automation {
     -w "$simulator" \
     -D "$trace_results_dir/trace" \
     -t "$tracetemplate" \
-    $bundle_dir \
+    "$bundle_dir" \
     -e UIARESULTSPATH "$trace_results_dir" \
     -e UIASCRIPT "$automation_script" \
     -AppleLanguages "($language)" \
-    -AppleLocale "$language" \
-    "$@"
+    -AppleLocale "$language"
 
   find $trace_results_dir/Run\ 1/ -name *landscape*png -type f -exec sips -r -90 \{\} \;
 }
@@ -195,14 +196,6 @@ function _copy_screenshots {
   cp $trace_results_dir/Run\ 1/*.png "$destination/$language"
 }
 
-function _reset_sim {
-  count=`ps aux | grep [l]aunchd_sim | wc -l`
-  if [ $count -ne 0 ]
-  then
-    kill -9 $(ps -ef | grep [l]aunchd_sim | awk {'print $2'})
-  fi
-}
-
 function _close_sim {
   # I know, I know. It says "iPhone Simulator". For some reason,
   # that's the only way Applescript can identify it.
@@ -210,3 +203,4 @@ function _close_sim {
 }
 
 main
+
