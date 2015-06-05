@@ -83,7 +83,7 @@ module Longbow
     deployment_target = main_target.deployment_target
 
     # Create New Target
-    new_target = Xcodeproj::Project::ProjectHelper.new_target project, :application, target, :ios, deployment_target, project.products_group
+    new_target = Xcodeproj::Project::ProjectHelper.new_target project, :application, target, :ios, deployment_target, project.products_group, 'en'
     if new_target
       # Add Build Phases
       main_target.build_phases.objects.each do |b|
